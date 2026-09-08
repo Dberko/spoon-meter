@@ -66,6 +66,17 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "clanChatPrefix",
+		name = "Prefix chatbox text with /",
+		description = "When the panel types your rating into the chatbox, start it with / so that pressing Enter sends it to your clan instead of public chat",
+		position = 5
+	)
+	default boolean clanChatPrefix()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "coxUniqueChance",
 		name = "CoX purple chance",
 		description = "Your average chance of a unique per Chambers raid. Points / 8675 gives the percent, so 30k points is 3.5",

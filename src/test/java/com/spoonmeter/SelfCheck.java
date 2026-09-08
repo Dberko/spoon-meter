@@ -172,6 +172,11 @@ public class SelfCheck
 		check("and fits too", gauntlet.length() <= SpoonSummary.MAX_CHAT_LENGTH);
 		check("an unknown boss says so rather than lying",
 			SpoonSummary.chatLine(big, "zamorak").contains("no rated page matching"));
+
+		// The panel prefixes with "/" so Enter sends to clan chat; that costs one character.
+		String clan = "/" + SpoonSummary.chatLine(big, "", SpoonSummary.MAX_CHAT_LENGTH - 1);
+		System.out.println("      " + clan);
+		check("the clan-prefixed line still fits", clan.length() <= SpoonSummary.MAX_CHAT_LENGTH);
 	}
 
 	private static void dropTableIntegrity(DropTable dropTable)

@@ -27,7 +27,8 @@ exact KC who would be doing worse than you.
 - **`::spoon`** — prints the one-line verdict to your game chat as a client message.
 - **`!spoon`** — typed into public, clan or friends chat, replaces your own message with the rating,
   the way `!kc` does. `!spoon gauntlet` rates a single page.
-- **Copy** / **Chat** — the full breakdown, or a one-liner short enough to paste into game chat.
+- **Copy** / **Say** — the full breakdown to the clipboard, or the one-line version typed straight
+  into your chatbox, ready to send with Enter.
 
 ### What other people see
 
@@ -41,8 +42,19 @@ limitation worth working around — it is how the client works:
   stats from RuneLite's chat-stats API. Spoon Meter has no server and uploads nothing, so no one
   else's client can look your numbers up.
 
-If you want clanmates to actually see it, hit **Chat** and paste. That sends real text, so it works
-for everyone, RuneLite or not.
+So to actually show a clan, the text has to end up in your own chat input. There is no paste into
+the game chatbox either — the only Ctrl+V handler in the client is the login screen's. Instead the
+panel's **Say** button writes the line into the chat input for you, and you press Enter:
+
+```java
+client.setVarcStrValue(335, line);       // chatbox typed text
+client.runScript(222, "");               // redraw the input line
+```
+
+Both ids come from core RuneLite rather than guesswork — `KeyRemappingPlugin` writes varcstr 335 to
+clear what you have typed, and `ChatHistoryPlugin` runs script 222 after filling in a reply. The
+line is prefixed with `/` by default so Enter sends it to your clan; turn that off in the config for
+public chat. The plugin never sends the message itself — you press Enter.
 
 ## Feeding it
 

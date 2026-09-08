@@ -106,13 +106,14 @@ public class SpoonMeterPanel extends PluginPanel
 		copyButton.setToolTipText("Copy the full breakdown to the clipboard");
 		copyButton.addActionListener(e -> copyToClipboard());
 
-		// Pasting this into clan chat is the only way other people actually see the rating: the
-		// client cannot alter the text it sends, so !spoon renders for you alone.
-		JButton chatButton = new JButton("Chat");
+		// Typing it into the chatbox is the only route to text other people actually receive: !spoon
+		// renders for you alone, and there is no paste into the game chatbox.
+		JButton chatButton = new JButton("Say");
 		chatButton.setFocusable(false);
 		chatButton.setFont(FontManager.getRunescapeSmallFont());
-		chatButton.setToolTipText("Copy a one-line version that fits in a game chat message");
-		chatButton.addActionListener(e -> copyChatLine());
+		chatButton.setToolTipText("<html>Type the rating into your chatbox, ready to send with Enter."
+			+ "<br>Also copied to the clipboard.</html>");
+		chatButton.addActionListener(e -> sayInChat());
 
 		JPanel buttons = new JPanel(new GridLayout(1, 2, 4, 0));
 		buttons.setOpaque(false);
@@ -193,7 +194,7 @@ public class SpoonMeterPanel extends PluginPanel
 			+ " pages read, none with enough KC to rate yet.</html>");
 	}
 
-	private void copyChatLine()
+	private void sayInChat()
 	{
 		if (report == null || report.isEmpty())
 		{
@@ -201,6 +202,7 @@ public class SpoonMeterPanel extends PluginPanel
 		}
 
 		copy(SpoonSummary.chatLine(report, ""));
+		plugin.prefillChatbox();
 	}
 
 	private void copyToClipboard()

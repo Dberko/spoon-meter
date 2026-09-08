@@ -30,6 +30,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.client.RuneLite;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatCommandManager;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -60,6 +61,11 @@ public class SpoonMeterPlugin extends Plugin
 
 	private static final String COMMAND = "spoon";
 	private static final String PUBLIC_COMMAND = "!spoon";
+
+	// Verified against shipped core plugins rather than guessed: KeyRemappingPlugin writes varcstr
+	// 335 to clear what you have typed, and ChatHistoryPlugin runs script 222 to redraw the input.
+	private static final int CHATBOX_TYPED_TEXT = 335;
+	private static final int CHAT_TEXT_INPUT_REBUILD = 222;
 	private static final int SAVE_INTERVAL_TICKS = 50; // ~30 seconds
 
 	@Inject
@@ -79,6 +85,9 @@ public class SpoonMeterPlugin extends Plugin
 
 	@Inject
 	private ChatCommandManager chatCommandManager;
+
+	@Inject
+	private ClientThread clientThread;
 
 	@Inject
 	private ScheduledExecutorService executor;
@@ -270,6 +279,34 @@ public class SpoonMeterPlugin extends Plugin
 			.build());
 
 		client.refreshChat();
+	}
+
+	/**
+	 * Types the rating into the game's chat input, leaving you to press Enter.
+	 *
+	 * <p>The client cannot send chat itself, and there is no paste into the game chatbox, so this is
+	 * the only route to text your clan actually receives. Both ids are the ones core RuneLite uses:
+	 * varcstr 335 is the chatbox typed text (KeyRemappingPlugin clears it), and script 222 redraws
+	 * the input line (ChatHistoryPlugin runs it after filling in a reply).
+	 */
+	void prefillChatbox()
+	{
+		SpoonReport report = buildReport();
+
+		if (report.isEmpty())
+		{
+			return;
+		}
+
+		String prefix = config.clanChatPrefix() ? "/" : "";
+		String line = prefix + SpoonSummary.chatLine(report, "",
+			SpoonSummary.MAX_CHAT_LENGTH - prefix.length());
+
+		clientThread.invokeLater(() ->
+		{
+			client.setVarcStrValue(CHATBOX_TYPED_TEXT, line);
+			client.runScript(CHAT_TEXT_INPUT_REBUILD, "");
+		});
 	}
 
 	private void setChatCommandRegistered(boolean wanted)
