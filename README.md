@@ -26,7 +26,17 @@ exact KC who would be doing worse than you.
   whether you are genuinely dry or just impatient.
 - **`::spoon`** — prints the one-line verdict to your game chat as a client message.
 - **`!spoon`** — typed into public, clan or friends chat, replaces your own message with the rating,
-  the way `!kc` does. `!spoon gauntlet` rates a single page.
+  the way `!kc` does. `!spoon araxxor` rates a single page and includes its kill count; the name is
+  matched loosely, so `arax` and `the gauntlet` both work.
+
+```
+Spoon Meter: A Bit Dry (27/100) - 108 uniques vs 114.7 expected, 0.9x
+Spoon Meter Araxxor: Spooned (92/100) - 468 kc, 9 uniques vs 5.5 expected, 1.6x
+Spoon Meter The Gauntlet: Hard Cursed (5/100) - 1,498 kc, 52 vs 65.3, 0.8x
+```
+
+Chat is capped at 80 characters, so the line drops detail in order of importance until it fits —
+which is why the Gauntlet line above loses the "uniques"/"expected" wording to keep its KC.
 - **Copy** / **Say** — the full breakdown to the clipboard, or the one-line version typed straight
   into your chatbox, ready to send with Enter.
 

@@ -49,6 +49,10 @@ final class SpoonSummary
 		double expected = report.getExpected();
 		double ratio = report.getRatio();
 
+		// Only a single page has a kill count worth printing. Summing attempts across different
+		// bosses would be a number that means nothing, so the account line goes without.
+		int kc = 0;
+
 		if (argument != null && !argument.trim().isEmpty())
 		{
 			SpoonReport.SourceLine match = findSource(report, argument);
@@ -64,16 +68,19 @@ final class SpoonSummary
 			obtained = match.getObtained();
 			expected = match.getExpected();
 			ratio = match.getRatio();
+			kc = match.getKc();
 		}
 
 		String head = "Spoon Meter" + subject + ": " + rating.getTitle() + " (" + score + "/100)";
+		String lead = kc > 0 ? " - " + WHOLE.format(kc) + " kc," : " -";
 
 		String[] candidates = {
-			head + " - " + WHOLE.format(obtained) + " uniques vs " + ONE_DP.format(expected)
+			head + lead + " " + WHOLE.format(obtained) + " uniques vs " + ONE_DP.format(expected)
 				+ " expected, " + ONE_DP.format(ratio) + "x",
-			head + " - " + WHOLE.format(obtained) + " vs " + ONE_DP.format(expected)
+			head + lead + " " + WHOLE.format(obtained) + " vs " + ONE_DP.format(expected)
 				+ ", " + ONE_DP.format(ratio) + "x",
-			head + " - " + ONE_DP.format(ratio) + "x",
+			head + lead + " " + ONE_DP.format(ratio) + "x",
+			head + (kc > 0 ? " - " + WHOLE.format(kc) + " kc" : ""),
 			head
 		};
 

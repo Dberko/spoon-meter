@@ -170,6 +170,8 @@ public class SelfCheck
 		System.out.println("      " + gauntlet);
 		check("a boss argument rates that page", gauntlet.contains("Gauntlet"));
 		check("and fits too", gauntlet.length() <= SpoonSummary.MAX_CHAT_LENGTH);
+		check("a named page shows its kill count", gauntlet.contains("1,498 kc"));
+		check("the account line has no kill count", !SpoonSummary.chatLine(big, "").contains(" kc"));
 		check("an unknown boss says so rather than lying",
 			SpoonSummary.chatLine(big, "zamorak").contains("no rated page matching"));
 
