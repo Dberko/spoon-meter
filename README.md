@@ -24,8 +24,25 @@ exact KC who would be doing worse than you.
 - **The item breakdown** — click any boss to see each unique, and for the ones you are missing, the
   percentage of players who would already have it at your KC. That is the number that tells you
   whether you are genuinely dry or just impatient.
-- **`::spoon`** — prints the one-line verdict to your game chat. Local only; nobody else sees it.
-- **Copy** — puts the full breakdown on your clipboard as plain text.
+- **`::spoon`** — prints the one-line verdict to your game chat as a client message.
+- **`!spoon`** — typed into public, clan or friends chat, replaces your own message with the rating,
+  the way `!kc` does. `!spoon gauntlet` rates a single page.
+- **Copy** / **Chat** — the full breakdown, or a one-liner short enough to paste into game chat.
+
+### What other people see
+
+`!spoon` renders **for you only**. Everyone else sees the literal text `!spoon`. This is not a
+limitation worth working around — it is how the client works:
+
+- `ChatboxInput` is immutable and `ChatInput` exposes only `consume()`/`resume()`, so a plugin can
+  cancel your message but cannot change the text that is sent. The core emoji plugin has the same
+  property: it rewrites `MessageNode`s locally, which is why non-RuneLite players see `:)`.
+- `!kc` looks like it works across clients because each viewer's own client fetches that player's
+  stats from RuneLite's chat-stats API. Spoon Meter has no server and uploads nothing, so no one
+  else's client can look your numbers up.
+
+If you want clanmates to actually see it, hit **Chat** and paste. That sends real text, so it works
+for everyone, RuneLite or not.
 
 ## Feeding it
 

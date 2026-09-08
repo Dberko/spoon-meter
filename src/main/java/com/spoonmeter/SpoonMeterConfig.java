@@ -55,6 +55,17 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "publicChatCommand",
+		name = "Enable !spoon in chat",
+		description = "Replaces your own !spoon message in public, clan or friends chat with your rating, the way !kc works. Only your client shows the formatted version - everyone else receives the literal text, because the client cannot change what is sent and nobody else has your collection log. Add a boss name to rate one page, e.g. !spoon gauntlet",
+		position = 4
+	)
+	default boolean publicChatCommand()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "coxUniqueChance",
 		name = "CoX purple chance",
 		description = "Your average chance of a unique per Chambers raid. Points / 8675 gives the percent, so 30k points is 3.5",

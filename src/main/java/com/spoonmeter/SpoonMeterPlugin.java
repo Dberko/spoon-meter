@@ -21,6 +21,9 @@ import javax.swing.SwingUtilities;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.MessageNode;
+import net.runelite.api.Player;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
@@ -28,6 +31,7 @@ import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.client.RuneLite;
 import net.runelite.client.chat.ChatColorType;
+import net.runelite.client.chat.ChatCommandManager;
 import net.runelite.client.chat.ChatMessageBuilder;
 import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.chat.QueuedMessage;
@@ -41,6 +45,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
+import net.runelite.client.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +59,7 @@ public class SpoonMeterPlugin extends Plugin
 	private static final Logger log = LoggerFactory.getLogger(SpoonMeterPlugin.class);
 
 	private static final String COMMAND = "spoon";
+	private static final String PUBLIC_COMMAND = "!spoon";
 	private static final int SAVE_INTERVAL_TICKS = 50; // ~30 seconds
 
 	@Inject
@@ -72,6 +78,9 @@ public class SpoonMeterPlugin extends Plugin
 	private ChatMessageManager chatMessageManager;
 
 	@Inject
+	private ChatCommandManager chatCommandManager;
+
+	@Inject
 	private ScheduledExecutorService executor;
 
 	@Inject
@@ -88,6 +97,7 @@ public class SpoonMeterPlugin extends Plugin
 	private NavigationButton navButton;
 
 	private boolean dirty;
+	private boolean commandRegistered;
 	private int ticksSinceSave;
 	private String loadedProfileKey;
 	private String lastFingerprint;
@@ -115,6 +125,7 @@ public class SpoonMeterPlugin extends Plugin
 			.build();
 
 		clientToolbar.addNavigation(navButton);
+		setChatCommandRegistered(config.publicChatCommand());
 
 		loadForCurrentProfile();
 		refreshPanel();
@@ -127,6 +138,7 @@ public class SpoonMeterPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		flush(false);
+		setChatCommandRegistered(false);
 		clientToolbar.removeNavigation(navButton);
 		pages.clear();
 		panel = null;
@@ -194,6 +206,7 @@ public class SpoonMeterPlugin extends Plugin
 	{
 		if (SpoonMeterConfig.GROUP.equals(event.getGroup()))
 		{
+			setChatCommandRegistered(config.publicChatCommand());
 			refreshPanel();
 		}
 	}
@@ -222,6 +235,60 @@ public class SpoonMeterPlugin extends Plugin
 			.type(ChatMessageType.CONSOLE)
 			.runeLiteFormattedMessage(message)
 			.build());
+	}
+
+	/**
+	 * Handles {@code !spoon} typed into public, clan or friends chat.
+	 *
+	 * <p>This rewrites the message where it is displayed, exactly like {@code !kc} does. Everyone
+	 * else still receives the literal "!spoon" text: the client cannot alter what is sent, and
+	 * nobody else's client holds this account's collection log to look the answer up with.
+	 */
+	private void onSpoonChatCommand(ChatMessage chatMessage, String message)
+	{
+		Player local = client.getLocalPlayer();
+
+		// Someone else's !spoon must be left alone rather than answered with our numbers.
+		if (local == null || local.getName() == null
+			|| !local.getName().equals(Text.sanitize(chatMessage.getName())))
+		{
+			return;
+		}
+
+		SpoonReport report = buildReport();
+		String argument = message.length() > PUBLIC_COMMAND.length()
+			? message.substring(PUBLIC_COMMAND.length()) : "";
+
+		String line = report.isEmpty()
+			? "Spoon Meter: no rated pages yet"
+			: SpoonSummary.chatLine(report, argument);
+
+		MessageNode node = chatMessage.getMessageNode();
+		node.setRuneLiteFormatMessage(new ChatMessageBuilder()
+			.append(ChatColorType.HIGHLIGHT)
+			.append(line)
+			.build());
+
+		client.refreshChat();
+	}
+
+	private void setChatCommandRegistered(boolean wanted)
+	{
+		if (wanted == commandRegistered)
+		{
+			return;
+		}
+
+		if (wanted)
+		{
+			chatCommandManager.registerCommand(PUBLIC_COMMAND, this::onSpoonChatCommand);
+		}
+		else
+		{
+			chatCommandManager.unregisterCommand(PUBLIC_COMMAND);
+		}
+
+		commandRegistered = wanted;
 	}
 
 	/** Called by the panel when the user picks a different sort order. */

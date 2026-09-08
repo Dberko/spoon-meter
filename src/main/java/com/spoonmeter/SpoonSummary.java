@@ -24,6 +24,87 @@ final class SpoonSummary
 			+ ONE_DP.format(report.getRatio()) + "x)";
 	}
 
+	/** The game's public/clan chat box refuses anything longer than this. */
+	static final int MAX_CHAT_LENGTH = 80;
+
+	/**
+	 * A single line that fits in a game chat message. Detail is dropped in order of importance until
+	 * it fits, so a long rating name plus large numbers degrades gracefully instead of being cut off
+	 * mid-word.
+	 *
+	 * @param argument optional boss name; blank for the account-wide verdict
+	 */
+	static String chatLine(SpoonReport report, String argument)
+	{
+		String subject = "";
+		LuckRating rating = report.getRating();
+		int score = report.getSpoonScore();
+		int obtained = report.getObtained();
+		double expected = report.getExpected();
+		double ratio = report.getRatio();
+
+		if (argument != null && !argument.trim().isEmpty())
+		{
+			SpoonReport.SourceLine match = findSource(report, argument);
+
+			if (match == null)
+			{
+				return "Spoon Meter: no rated page matching " + argument.trim();
+			}
+
+			subject = " " + match.getName();
+			rating = match.getRating();
+			score = LuckRating.spoonScore(match.getPercentile());
+			obtained = match.getObtained();
+			expected = match.getExpected();
+			ratio = match.getRatio();
+		}
+
+		String head = "Spoon Meter" + subject + ": " + rating.getTitle() + " (" + score + "/100)";
+
+		String[] candidates = {
+			head + " - " + WHOLE.format(obtained) + " uniques vs " + ONE_DP.format(expected)
+				+ " expected, " + ONE_DP.format(ratio) + "x",
+			head + " - " + WHOLE.format(obtained) + " vs " + ONE_DP.format(expected)
+				+ ", " + ONE_DP.format(ratio) + "x",
+			head + " - " + ONE_DP.format(ratio) + "x",
+			head
+		};
+
+		for (String candidate : candidates)
+		{
+			if (candidate.length() <= MAX_CHAT_LENGTH)
+			{
+				return candidate;
+			}
+		}
+
+		return candidates[candidates.length - 1].substring(0, MAX_CHAT_LENGTH);
+	}
+
+	private static SpoonReport.SourceLine findSource(SpoonReport report, String argument)
+	{
+		String wanted = DropTable.normalise(argument);
+
+		for (SpoonReport.SourceLine source : report.getSources())
+		{
+			if (DropTable.normalise(source.getName()).equals(wanted))
+			{
+				return source;
+			}
+		}
+
+		for (SpoonReport.SourceLine source : report.getSources())
+		{
+			if (DropTable.normalise(source.getName()).contains(wanted))
+			{
+				return source;
+			}
+		}
+
+		return null;
+	}
+
 	static String forClipboard(SpoonReport report, SortMode sortMode)
 	{
 		StringBuilder sb = new StringBuilder();

@@ -30,6 +30,7 @@ public class SelfCheck
 		dropTableIntegrity(dropTable);
 		ratingPipeline(dropTable);
 		splitPages(dropTable);
+		chatLines(dropTable);
 
 		System.out.println();
 		System.out.println(checks + " checks, " + failures + " failed");
@@ -107,14 +108,7 @@ public class SelfCheck
 		chances.put("toa", 0.12);
 		chances.put("toaexpert", 0.15);
 
-		// Real numbers from a live account: 11 normal runs, 1,487 corrupted.
-		CollectionLogPage gauntlet = new CollectionLogPage("The Gauntlet");
-		gauntlet.getCounters().put("Gauntlet completion count", 11);
-		gauntlet.getCounters().put("Corrupted Gauntlet completion count", 1487);
-		gauntlet.getItems().put("Crystal armour seed", 28);
-		gauntlet.getItems().put("Crystal weapon seed", 23);
-		gauntlet.getItems().put("Enhanced crystal weapon seed", 1);
-		gauntlet.getItems().put("Gauntlet cape", 1);
+		CollectionLogPage gauntlet = gauntletPage();
 
 		SpoonReport report = SpoonReport.build(Collections.singletonList(gauntlet), dropTable, chances, 10);
 		SpoonReport.SourceLine line = report.getSources().get(0);
@@ -144,6 +138,40 @@ public class SelfCheck
 		SpoonReport raids = SpoonReport.build(Collections.singletonList(cox), dropTable, chances, 10);
 
 		near("CM completions do not leak into normal mode", 44 * 0.035, raids.getExpected(), 1e-9);
+	}
+
+	private static void chatLines(DropTable dropTable)
+	{
+		section("Chat line");
+
+		Map<String, Double> chances = new HashMap<>();
+		chances.put("cox", 0.035);
+		chances.put("coxcm", 0.05);
+		chances.put("tob", 0.037);
+		chances.put("tobhm", 0.044);
+		chances.put("toa", 0.12);
+		chances.put("toaexpert", 0.15);
+
+		SpoonReport small = SpoonReport.build(Collections.singletonList(zulrah(1024, 1)),
+			dropTable, chances, 10);
+		String smallLine = SpoonSummary.chatLine(small, "");
+		System.out.println("      " + smallLine);
+		check("a modest account fits in a chat message", smallLine.length() <= SpoonSummary.MAX_CHAT_LENGTH);
+
+		// Longest rating name plus four digit counts is where the full form stops fitting.
+		SpoonReport big = SpoonReport.build(Arrays.asList(zulrah(200000, 2000), gauntletPage()),
+			dropTable, chances, 10);
+		String bigLine = SpoonSummary.chatLine(big, "");
+		System.out.println("      " + bigLine);
+		check("and so does a huge one, by dropping detail", bigLine.length() <= SpoonSummary.MAX_CHAT_LENGTH);
+		check("without truncating mid-word", !bigLine.endsWith("expected") && !bigLine.endsWith("vs"));
+
+		String gauntlet = SpoonSummary.chatLine(big, "gauntlet");
+		System.out.println("      " + gauntlet);
+		check("a boss argument rates that page", gauntlet.contains("Gauntlet"));
+		check("and fits too", gauntlet.length() <= SpoonSummary.MAX_CHAT_LENGTH);
+		check("an unknown boss says so rather than lying",
+			SpoonSummary.chatLine(big, "zamorak").contains("no rated page matching"));
 	}
 
 	private static void dropTableIntegrity(DropTable dropTable)
@@ -270,6 +298,19 @@ public class SelfCheck
 
 		System.out.println();
 		System.out.println("  Sample verdict: " + SpoonSummary.oneLine(cursed));
+	}
+
+	/** Real numbers from a live account: 11 normal runs, 1,487 corrupted. */
+	private static CollectionLogPage gauntletPage()
+	{
+		CollectionLogPage gauntlet = new CollectionLogPage("The Gauntlet");
+		gauntlet.getCounters().put("Gauntlet completion count", 11);
+		gauntlet.getCounters().put("Corrupted Gauntlet completion count", 1487);
+		gauntlet.getItems().put("Crystal armour seed", 28);
+		gauntlet.getItems().put("Crystal weapon seed", 23);
+		gauntlet.getItems().put("Enhanced crystal weapon seed", 1);
+		gauntlet.getItems().put("Gauntlet cape", 1);
+		return gauntlet;
 	}
 
 	private static CollectionLogPage zulrah(int kc, int uniques)

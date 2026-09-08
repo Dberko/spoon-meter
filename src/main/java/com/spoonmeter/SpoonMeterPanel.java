@@ -3,6 +3,7 @@ package com.spoonmeter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
@@ -102,11 +103,24 @@ public class SpoonMeterPanel extends PluginPanel
 		JButton copyButton = new JButton("Copy");
 		copyButton.setFocusable(false);
 		copyButton.setFont(FontManager.getRunescapeSmallFont());
-		copyButton.setToolTipText("Copy the rating to the clipboard");
+		copyButton.setToolTipText("Copy the full breakdown to the clipboard");
 		copyButton.addActionListener(e -> copyToClipboard());
 
+		// Pasting this into clan chat is the only way other people actually see the rating: the
+		// client cannot alter the text it sends, so !spoon renders for you alone.
+		JButton chatButton = new JButton("Chat");
+		chatButton.setFocusable(false);
+		chatButton.setFont(FontManager.getRunescapeSmallFont());
+		chatButton.setToolTipText("Copy a one-line version that fits in a game chat message");
+		chatButton.addActionListener(e -> copyChatLine());
+
+		JPanel buttons = new JPanel(new GridLayout(1, 2, 4, 0));
+		buttons.setOpaque(false);
+		buttons.add(copyButton);
+		buttons.add(chatButton);
+
 		controls.add(sortBox, BorderLayout.CENTER);
-		controls.add(copyButton, BorderLayout.EAST);
+		controls.add(buttons, BorderLayout.EAST);
 		return controls;
 	}
 
@@ -179,6 +193,16 @@ public class SpoonMeterPanel extends PluginPanel
 			+ " pages read, none with enough KC to rate yet.</html>");
 	}
 
+	private void copyChatLine()
+	{
+		if (report == null || report.isEmpty())
+		{
+			return;
+		}
+
+		copy(SpoonSummary.chatLine(report, ""));
+	}
+
 	private void copyToClipboard()
 	{
 		if (report == null || report.isEmpty())
@@ -186,7 +210,11 @@ public class SpoonMeterPanel extends PluginPanel
 			return;
 		}
 
-		String text = SpoonSummary.forClipboard(report, (SortMode) sortBox.getSelectedItem());
+		copy(SpoonSummary.forClipboard(report, (SortMode) sortBox.getSelectedItem()));
+	}
+
+	private static void copy(String text)
+	{
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
 	}
 }
