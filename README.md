@@ -28,6 +28,8 @@ exact KC who would be doing worse than you.
 - **`!spoon`** — typed into public, clan or friends chat, replaces your own message with the rating,
   the way `!kc` does. `!spoon araxxor` rates a single page and includes its kill count; the name is
   matched loosely, so `arax` and `the gauntlet` both work.
+- **Copy** / **Chat** — the full breakdown to the clipboard, or a one-liner short enough for a game
+  chat message.
 
 ```
 Spoon Meter: A Bit Dry (27/100) - 108 uniques vs 114.7 expected, 0.9x
@@ -37,8 +39,6 @@ Spoon Meter The Gauntlet: Hard Cursed (5/100) - 1,498 kc, 52 vs 65.3, 0.8x
 
 Chat is capped at 80 characters, so the line drops detail in order of importance until it fits —
 which is why the Gauntlet line above loses the "uniques"/"expected" wording to keep its KC.
-- **Copy** / **Say** — the full breakdown to the clipboard, or the one-line version typed straight
-  into your chatbox, ready to send with Enter.
 
 ### What other people see
 
@@ -52,19 +52,13 @@ limitation worth working around — it is how the client works:
   stats from RuneLite's chat-stats API. Spoon Meter has no server and uploads nothing, so no one
   else's client can look your numbers up.
 
-So to actually show a clan, the text has to end up in your own chat input. There is no paste into
-the game chatbox either — the only Ctrl+V handler in the client is the login screen's. Instead the
-panel's **Say** button writes the line into the chat input for you, and you press Enter:
+There is no way to put it in front of your clan automatically, and that is deliberate. An earlier
+version wrote the line into the chat input for you to send with Enter; Plugin Hub review rejected
+it, because writing to the chat input is auto typing regardless of what triggers it. Nor can the
+text be pasted — the only Ctrl+V handler in the client is the login screen's.
 
-```java
-client.setVarcStrValue(335, line);       // chatbox typed text
-client.runScript(222, "");               // redraw the input line
-```
-
-Both ids come from core RuneLite rather than guesswork — `KeyRemappingPlugin` writes varcstr 335 to
-clear what you have typed, and `ChatHistoryPlugin` runs script 222 after filling in a reply. The
-line is prefixed with `/` by default so Enter sends it to your clan; turn that off in the config for
-public chat. The plugin never sends the message itself — you press Enter.
+So the **Chat** button copies a line short enough for a game message, for Discord or for typing out
+by hand, and that is as far as the plugin goes.
 
 ## Feeding it
 

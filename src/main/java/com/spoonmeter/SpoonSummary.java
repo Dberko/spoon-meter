@@ -36,12 +36,6 @@ final class SpoonSummary
 	 */
 	static String chatLine(SpoonReport report, String argument)
 	{
-		return chatLine(report, argument, MAX_CHAT_LENGTH);
-	}
-
-	/** As above, but with room reserved for a channel prefix such as "/" for clan chat. */
-	static String chatLine(SpoonReport report, String argument, int maxLength)
-	{
 		String subject = "";
 		LuckRating rating = report.getRating();
 		int score = report.getSpoonScore();
@@ -86,14 +80,14 @@ final class SpoonSummary
 
 		for (String candidate : candidates)
 		{
-			if (candidate.length() <= maxLength)
+			if (candidate.length() <= MAX_CHAT_LENGTH)
 			{
 				return candidate;
 			}
 		}
 
 		String shortest = candidates[candidates.length - 1];
-		return shortest.length() <= maxLength ? shortest : shortest.substring(0, maxLength);
+		return shortest.length() <= MAX_CHAT_LENGTH ? shortest : shortest.substring(0, MAX_CHAT_LENGTH);
 	}
 
 	private static SpoonReport.SourceLine findSource(SpoonReport report, String argument)
