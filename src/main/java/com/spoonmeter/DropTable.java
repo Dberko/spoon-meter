@@ -1,8 +1,6 @@
 package com.spoonmeter;
 
 import com.google.gson.Gson;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
+import net.runelite.client.util.Filepath;
 
 /**
  * The drop rates the rating is measured against, loaded from {@code drop_rates.json}.
@@ -179,11 +178,11 @@ public class DropTable
 	 * drop a corrected file next to their RuneLite settings means a wrong rate never needs a
 	 * plugin update to fix.
 	 */
-	public static DropTable load(Gson gson, @Nullable File override) throws IOException
+	public static DropTable load(Gson gson, @Nullable Filepath override) throws IOException
 	{
 		if (override != null && override.isFile())
 		{
-			try (Reader reader = new InputStreamReader(new FileInputStream(override), StandardCharsets.UTF_8))
+			try (Reader reader = override.openBufferedReader())
 			{
 				return fromReader(gson, reader);
 			}

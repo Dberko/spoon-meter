@@ -4,13 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -29,7 +26,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
-import net.runelite.client.RuneLite;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatCommandManager;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -44,6 +40,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.Filepath;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 import org.slf4j.Logger;
@@ -52,7 +49,10 @@ import org.slf4j.LoggerFactory;
 @PluginDescriptor(
 	name = "Spoon Meter",
 	description = "Rates how spooned or cursed your account is from collection log KC and uniques",
-	tags = {"collection", "log", "luck", "drop", "rate", "spoon", "dry", "rng"}
+	tags = {"collection", "log", "luck", "drop", "rate", "spoon", "dry", "rng"},
+	internalName = "spoon-meter",
+	// Moves anything written by an earlier build into the plugin directory on first run.
+	legacyDataDirectory = "spoon-meter"
 )
 public class SpoonMeterPlugin extends Plugin
 {
@@ -99,6 +99,7 @@ public class SpoonMeterPlugin extends Plugin
 	private boolean dirty;
 	private boolean commandRegistered;
 	private int ticksSinceSave;
+	private Filepath dataDir;
 	private String loadedProfileKey;
 	private String lastFingerprint;
 
@@ -112,7 +113,10 @@ public class SpoonMeterPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		parser = new CollectionLogParser(itemManager);
-		dropTable = DropTable.load(gson, new File(dataDir(), "drop_rates.json"));
+
+		dataDir = getPluginDirectory();
+		dataDir.createDirectories();
+		dropTable = DropTable.load(gson, dataDir.joinSegment("drop_rates.json"));
 
 		panel = new SpoonMeterPanel(this);
 
@@ -145,6 +149,7 @@ public class SpoonMeterPlugin extends Plugin
 		navButton = null;
 		lastFingerprint = null;
 		loadedProfileKey = null;
+		dataDir = null;
 	}
 
 	@Subscribe
@@ -353,24 +358,15 @@ public class SpoonMeterPlugin extends Plugin
 	}
 
 	// --- persistence ----------------------------------------------------------------------
-	// Kept in RuneLite's own directory rather than the config service: a full collection log is far
-	// too big to be sensible as a synced config value, and it is per account anyway.
+	// Kept as a file rather than in the config service: a full collection log is far too big to be
+	// sensible as a synced config value, and it is per account anyway. All of it goes through
+	// Filepath, which confines the plugin to its own directory under ~/.runelite/plugin-data.
 
-	private static File dataDir()
+	private Filepath dataFile(String profileKey)
 	{
-		File dir = new File(RuneLite.RUNELITE_DIR, "spoon-meter");
-
-		if (!dir.exists() && !dir.mkdirs())
-		{
-			log.warn("Could not create data directory {}", dir);
-		}
-
-		return dir;
-	}
-
-	private File dataFile(String profileKey)
-	{
-		return new File(dataDir(), profileKey.replaceAll("[^A-Za-z0-9_.-]", "_") + ".json");
+		// Filepath rejects anything that could escape the directory, but a profile key is not meant to
+		// carry punctuation in the first place, so it is flattened before it gets there.
+		return dataDir.joinSegment(profileKey.replaceAll("[^A-Za-z0-9_.-]", "_") + ".json");
 	}
 
 	/**
@@ -381,7 +377,7 @@ public class SpoonMeterPlugin extends Plugin
 	{
 		String profileKey = configManager.getRSProfileKey();
 
-		if (profileKey == null || profileKey.equals(loadedProfileKey))
+		if (profileKey == null || profileKey.equals(loadedProfileKey) || dataDir == null)
 		{
 			return;
 		}
@@ -392,7 +388,7 @@ public class SpoonMeterPlugin extends Plugin
 		pages.clear();
 		lastFingerprint = null;
 
-		File file = dataFile(profileKey);
+		Filepath file = dataFile(profileKey);
 
 		if (file.isFile())
 		{
@@ -400,7 +396,7 @@ public class SpoonMeterPlugin extends Plugin
 			{
 			}.getType();
 
-			try (Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8))
+			try (Reader reader = file.openBufferedReader())
 			{
 				Map<String, CollectionLogPage> saved = gson.fromJson(reader, type);
 
@@ -451,7 +447,7 @@ public class SpoonMeterPlugin extends Plugin
 	{
 		ticksSinceSave = 0;
 
-		if (!dirty || loadedProfileKey == null || pages.isEmpty())
+		if (!dirty || loadedProfileKey == null || dataDir == null || pages.isEmpty())
 		{
 			return;
 		}
@@ -459,7 +455,7 @@ public class SpoonMeterPlugin extends Plugin
 		dirty = false;
 
 		Map<String, CollectionLogPage> snapshot = new LinkedHashMap<>(pages);
-		File file = dataFile(loadedProfileKey);
+		Filepath file = dataFile(loadedProfileKey);
 
 		if (async)
 		{
@@ -472,9 +468,9 @@ public class SpoonMeterPlugin extends Plugin
 		}
 	}
 
-	private void write(File file, Map<String, CollectionLogPage> snapshot)
+	private void write(Filepath file, Map<String, CollectionLogPage> snapshot)
 	{
-		try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8))
+		try (Writer writer = file.openBufferedWriter())
 		{
 			gson.toJson(snapshot, writer);
 		}

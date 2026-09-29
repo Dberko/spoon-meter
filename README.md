@@ -36,7 +36,8 @@ local player's own message, because no other client holds your collection log.
 - **No network.** The plugin makes no requests and uploads nothing.
 - **No input.** Nothing is written to the client; the only `invokeLater` is `SwingUtilities`, for the
   panel.
-- **Storage.** Read pages are saved to `~/.runelite/spoon-meter/<rs profile key>.json`.
+- **Storage.** All file access goes through RuneLite's `Filepath`, confined to the plugin directory.
+  Read pages are saved to `plugin-data/spoon-meter/<rs profile key>.json`.
 - **Parsing.** The collection log is matched on structure — the `Obtained: x/y` line and the widget
   holding the most item children — rather than hardcoded child ids.
 
@@ -50,7 +51,7 @@ function so it holds up at raid-sized lambdas. Per-item dryness is `1 - (1 - p)^
 ## Drop rates
 
 Rates live in [`drop_rates.json`](src/main/resources/com/spoonmeter/drop_rates.json), from the OSRS
-Wiki. Copy it to `~/.runelite/spoon-meter/drop_rates.json` to override it without rebuilding.
+Wiki. Drop a `drop_rates.json` into the plugin directory to override it without rebuilding.
 
 Pages that count several activities separately declare `variants`, each naming its counter, and
 expectations are summed across them — so 11 normal and 1,487 corrupted Gauntlet runs score at 1/120
