@@ -50,9 +50,7 @@ import org.slf4j.LoggerFactory;
 	name = "Spoon Meter",
 	description = "Rates how spooned or cursed your account is from collection log KC and uniques",
 	tags = {"collection", "log", "luck", "drop", "rate", "spoon", "dry", "rng"},
-	internalName = "spoon-meter",
-	// Moves anything written by an earlier build into the plugin directory on first run.
-	legacyDataDirectory = "spoon-meter"
+	internalName = "spoon-meter"
 )
 public class SpoonMeterPlugin extends Plugin
 {
