@@ -41,6 +41,9 @@
         { "name": "Bandos tassets", "rate": 381 },
         { "name": "Bandos boots", "rate": 381 },
         { "name": "Bandos hilt", "rate": 508 },
+        { "name": "Godsword shard 1", "rate": 762 },
+        { "name": "Godsword shard 2", "rate": 762 },
+        { "name": "Godsword shard 3", "rate": 762 },
         { "name": "Pet general graardor", "rate": 5000 }
       ]
     },
@@ -51,6 +54,9 @@
         { "name": "Armadyl chestplate", "rate": 381 },
         { "name": "Armadyl chainskirt", "rate": 381 },
         { "name": "Armadyl hilt", "rate": 508 },
+        { "name": "Godsword shard 1", "rate": 762 },
+        { "name": "Godsword shard 2", "rate": 762 },
+        { "name": "Godsword shard 3", "rate": 762 },
         { "name": "Pet kree'arra", "rate": 5000 }
       ]
     },
@@ -61,6 +67,9 @@
         { "name": "Armadyl crossbow", "rate": 508 },
         { "name": "Saradomin's light", "rate": 254 },
         { "name": "Saradomin hilt", "rate": 508 },
+        { "name": "Godsword shard 1", "rate": 762 },
+        { "name": "Godsword shard 2", "rate": 762 },
+        { "name": "Godsword shard 3", "rate": 762 },
         { "name": "Pet zilyana", "rate": 5000 }
       ]
     },
@@ -71,6 +80,9 @@
         { "name": "Staff of the dead", "rate": 508 },
         { "name": "Zamorakian spear", "rate": 508 },
         { "name": "Zamorak hilt", "rate": 508 },
+        { "name": "Godsword shard 1", "rate": 762 },
+        { "name": "Godsword shard 2", "rate": 762 },
+        { "name": "Godsword shard 3", "rate": 762 },
         { "name": "Pet k'ril tsutsaroth", "rate": 5000 }
       ]
     },

@@ -62,6 +62,12 @@ deliberately excluded, since the log records items received rather than drops.
 
 ## Known limitations
 
+- **Shared items are pooled.** A page shows your *total* quantity of an item, not what that source
+  gave you, so one Virtus robe top appears on all four Desert Treasure pages and one uncut onyx on
+  Zulrah, Zalcano and Skotizo. Such items are counted once and split between their sources by
+  expectation share, so a boss with one kill cannot claim a drop another earned over hundreds. The
+  residue: if a source is missing from the drop table — Slayer tasks, Zalcano — its drops still land
+  on whichever rated page lists the item.
 - KC is a proxy for rolls, and loot left on the floor was never seen by the log.
 - Duplicate protection (Araxxor halberd pieces, DT2 vestiges) is modelled as independent rolls.
 - A single rare drop swings one page hard at low KC; the account figure is far steadier.

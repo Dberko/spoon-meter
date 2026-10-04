@@ -31,6 +31,7 @@ public class SelfCheck
 		ratingPipeline(dropTable);
 		splitPages(dropTable);
 		chatLines(dropTable);
+		sharedItems(dropTable);
 
 		System.out.println();
 		System.out.println(checks + " checks, " + failures + " failed");
@@ -175,6 +176,109 @@ public class SelfCheck
 		check("an unknown boss says so rather than lying",
 			SpoonSummary.chatLine(big, "zamorak").contains("no rated page matching"));
 
+	}
+
+	private static void sharedItems(DropTable dropTable)
+	{
+		section("Items with several sources");
+
+		Map<String, Double> chances = new HashMap<>();
+
+		// Straight from a live account. Every Desert Treasure page lists the Virtus pieces and the
+		// chromium ingot, and each shows the account-wide total rather than what that boss gave.
+		CollectionLogPage vardorvis = dt2("Vardorvis", "Vardorvis kills", 252);
+		vardorvis.getItems().put("Executioner's axe head", 1);
+
+		CollectionLogPage duke = dt2("Duke Sucellus", "Duke Sucellus kills", 61);
+		CollectionLogPage whisperer = dt2("The Whisperer", "Whisperer kills", 1);
+		whisperer.getItems().put("Chromium ingot", 1); // page was read earlier, so its total is stale
+
+		// minKc of 1 so the one-kill page is rated: that is the case being demonstrated.
+		SpoonReport report = SpoonReport.build(Arrays.asList(vardorvis, duke, whisperer),
+			dropTable, chances, 1);
+
+		// One axe head, one robe top, two ingots. Counting per page would say nine.
+		check("a shared item is counted once for the account", report.getObtained() == 4);
+
+		SpoonReport.SourceLine vard = source(report, "Vardorvis");
+		SpoonReport.SourceLine whisp = source(report, "The Whisperer");
+
+		check("the page that earned it gets the credit", obtained(vard, "Virtus robe top") == 1);
+		check("and the one-kill page gets none", obtained(whisp, "Virtus robe top") == 0);
+		check("the stale ingot count does not win", obtained(vard, "Chromium ingot") == 2);
+
+		check("so one kill no longer looks spooned", whisp.getObtained() == 0);
+		System.out.println("      Whisperer: " + whisp.getObtained() + " vs "
+			+ SpoonSummary.ONE_DP.format(whisp.getExpected()) + " expected, "
+			+ whisp.getRating().getTitle());
+
+		// Dryness is a question about every source at once, not this page alone.
+		double vardDry = dryness(vard, "Virtus robe top");
+		double whispDry = dryness(whisp, "Virtus robe top");
+		check("dryness is pooled across the sources", Math.abs(vardDry - whispDry) < 1e-9);
+
+		// Vorkath and the King Black Dragon both drop the draconic visage.
+		CollectionLogPage vorkath = new CollectionLogPage("Vorkath");
+		vorkath.getCounters().put("Vorkath kills", 2000);
+		vorkath.getItems().put("Draconic visage", 1);
+
+		CollectionLogPage kbd = new CollectionLogPage("King Black Dragon");
+		kbd.getCounters().put("King Black Dragon kills", 50);
+		kbd.getItems().put("Draconic visage", 1);
+
+		SpoonReport dragons = SpoonReport.build(Arrays.asList(vorkath, kbd), dropTable, chances, 10);
+
+		check("one visage across two bosses counts once",
+			obtained(source(dragons, "Vorkath"), "Draconic visage")
+				+ obtained(source(dragons, "King Black Dragon"), "Draconic visage") == 1);
+	}
+
+	private static CollectionLogPage dt2(String name, String counter, int kc)
+	{
+		CollectionLogPage page = new CollectionLogPage(name);
+		page.getCounters().put(counter, kc);
+		page.getItems().put("Virtus robe top", 1);
+		page.getItems().put("Chromium ingot", 2);
+		return page;
+	}
+
+	private static SpoonReport.SourceLine source(SpoonReport report, String name)
+	{
+		for (SpoonReport.SourceLine line : report.getSources())
+		{
+			if (line.getName().equals(name))
+			{
+				return line;
+			}
+		}
+
+		throw new IllegalStateException(name + " was not rated");
+	}
+
+	private static int obtained(SpoonReport.SourceLine line, String item)
+	{
+		for (SpoonReport.ItemLine candidate : line.getItems())
+		{
+			if (candidate.getName().equals(item))
+			{
+				return candidate.getObtained();
+			}
+		}
+
+		return 0;
+	}
+
+	private static double dryness(SpoonReport.SourceLine line, String item)
+	{
+		for (SpoonReport.ItemLine candidate : line.getItems())
+		{
+			if (candidate.getName().equals(item))
+			{
+				return candidate.getDryness();
+			}
+		}
+
+		return 0;
 	}
 
 	private static void dropTableIntegrity(DropTable dropTable)
