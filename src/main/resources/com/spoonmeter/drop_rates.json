@@ -266,6 +266,7 @@
       "name": "Vardorvis",
       "items": [
         { "name": "Ultor vestige", "rate": 1088 },
+        { "name": "Awakener's orb", "rate": 80.6 },
         { "name": "Executioner's axe head", "rate": 1088 },
         { "name": "Chromium ingot", "rate": 362.7 },
         { "name": "Virtus mask", "rate": 3264 },
@@ -279,6 +280,7 @@
       "approx": true,
       "items": [
         { "name": "Magus vestige", "rate": 1088 },
+        { "name": "Awakener's orb", "rate": 80.6 },
         { "name": "Eye of the duke", "rate": 1088 },
         { "name": "Chromium ingot", "rate": 362.7 },
         { "name": "Virtus mask", "rate": 3264 },
@@ -291,6 +293,7 @@
       "approx": true,
       "items": [
         { "name": "Venator vestige", "rate": 1088 },
+        { "name": "Awakener's orb", "rate": 80.6 },
         { "name": "Leviathan's lure", "rate": 1088 },
         { "name": "Chromium ingot", "rate": 362.7 },
         { "name": "Virtus mask", "rate": 3264 },
@@ -303,6 +306,7 @@
       "approx": true,
       "items": [
         { "name": "Bellator vestige", "rate": 1088 },
+        { "name": "Awakener's orb", "rate": 80.6 },
         { "name": "Siren's staff", "rate": 1088 },
         { "name": "Chromium ingot", "rate": 362.7 },
         { "name": "Virtus mask", "rate": 3264 },
@@ -357,6 +361,139 @@
             { "name": "Crystal armour seed", "rate": 50 },
             { "name": "Enhanced crystal weapon seed", "rate": 400 },
             { "name": "Youngllef", "rate": 800 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Glough's Experiments",
+      "aliases": ["Demonic Gorillas"],
+      "variants": [
+        {
+          "counter": "Demonic Gorilla kills",
+          "items": [
+            { "name": "Zenyte shard", "rate": 300 },
+            { "name": "Ballista limbs", "rate": 500 },
+            { "name": "Ballista spring", "rate": 500 },
+            { "name": "Light frame", "rate": 750 },
+            { "name": "Heavy frame", "rate": 1500 },
+            { "name": "Monkey tail", "rate": 1500 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tormented Demons",
+      "items": [
+        { "name": "Tormented synapse", "rate": 500 },
+        { "name": "Burning claw", "rate": 501 }
+      ]
+    },
+    {
+      "name": "Phantom Muspah",
+      "items": [
+        { "name": "Venator shard", "rate": 100 },
+        { "name": "Ancient icon", "rate": 50 },
+        { "name": "Muphin", "rate": 2500 }
+      ]
+    },
+    {
+      "name": "Royal Titans",
+      "items": [
+        { "name": "Deadeye prayer scroll", "rate": 75 },
+        { "name": "Mystic vigour prayer scroll", "rate": 75 },
+        { "name": "Ice element staff crown", "rate": 75 },
+        { "name": "Fire element staff crown", "rate": 75 },
+        { "name": "Bran", "rate": 3000 }
+      ]
+    },
+    {
+      "name": "Moons of Peril",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Lunar Chests opened",
+          "items": [
+            { "name": "Blood moon helm", "rate": 224 },
+            { "name": "Blood moon chestplate", "rate": 224 },
+            { "name": "Blood moon tassets", "rate": 224 },
+            { "name": "Blue moon helm", "rate": 224 },
+            { "name": "Blue moon chestplate", "rate": 224 },
+            { "name": "Blue moon tassets", "rate": 224 },
+            { "name": "Blue moon spear", "rate": 224 },
+            { "name": "Eclipse moon helm", "rate": 224 },
+            { "name": "Eclipse moon chestplate", "rate": 224 },
+            { "name": "Eclipse moon tassets", "rate": 224 },
+            { "name": "Eclipse atlatl", "rate": 224 },
+            { "name": "Dual macuahuitl", "rate": 224 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Hueycoatl",
+      "items": [
+        { "name": "Tome of earth", "rate": 90 },
+        { "name": "Dragon hunter wand", "rate": 105 },
+        { "name": "Huberte", "rate": 400 }
+      ]
+    },
+    {
+      "name": "Yama",
+      "items": [
+        { "name": "Oathplate helm", "rate": 600 },
+        { "name": "Oathplate chest", "rate": 600 },
+        { "name": "Oathplate legs", "rate": 600 },
+        { "name": "Yami", "rate": 2500 }
+      ]
+    },
+    {
+      "name": "Doom of Mokhaiotl",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Total delves",
+          "uniqueChanceKey": "doom",
+          "totalWeight": 5,
+          "items": [
+            { "name": "Mokhaiotl cloth", "weight": 1 },
+            { "name": "Eye of ayak", "weight": 1 },
+            { "name": "Avernic treads", "weight": 1 },
+            { "name": "Dom", "weight": 2 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hespori",
+      "approx": true,
+      "items": [
+        { "name": "Bottomless compost bucket", "rate": 35 },
+        { "name": "Tangleroot", "rate": 4950 }
+      ]
+    },
+    {
+      "name": "Kalphite Queen",
+      "items": [
+        { "name": "Dragon chainbody", "rate": 128 },
+        { "name": "Kq head", "rate": 128 },
+        { "name": "Dragon 2h sword", "rate": 256 },
+        { "name": "Jar of sand", "rate": 2000 },
+        { "name": "Kalphite princess", "rate": 3000 }
+      ]
+    },
+    {
+      "name": "Tempoross",
+      "variants": [
+        {
+          "counter": "Reward permits claimed",
+          "items": [
+            { "name": "Fish barrel", "rate": 400 },
+            { "name": "Tackle box", "rate": 400 },
+            { "name": "Big harpoonfish", "rate": 1600 },
+            { "name": "Tome of water", "rate": 1600 },
+            { "name": "Dragon harpoon", "rate": 8000 },
+            { "name": "Tiny tempor", "rate": 8000 }
           ]
         }
       ]

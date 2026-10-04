@@ -339,6 +339,7 @@ public class SpoonMeterPlugin extends Plugin
 		uniqueChances.put("tobhm", config.tobHardUniqueChance() / 100.0);
 		uniqueChances.put("toa", config.toaUniqueChance() / 100.0);
 		uniqueChances.put("toaexpert", config.toaExpertUniqueChance() / 100.0);
+		uniqueChances.put("doom", config.doomUniqueChance() / 100.0);
 
 		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc());
 	}

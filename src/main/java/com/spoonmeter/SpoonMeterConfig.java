@@ -66,6 +66,19 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "doomUniqueChance",
+		name = "Doom unique chance",
+		description = "Your average chance of a unique per delve at Doom of Mokhaiotl. It climbs with depth: about 0.1 at delve 3, 0.39 at delve 6, 0.56 at delve 9 and beyond",
+		position = 27,
+		section = raidSection
+	)
+	@Units(Units.PERCENT)
+	default double doomUniqueChance()
+	{
+		return 0.39;
+	}
+
+	@ConfigItem(
 		keyName = "coxUniqueChance",
 		name = "CoX purple chance",
 		description = "Your average chance of a unique per Chambers raid. Points / 8675 gives the percent, so 30k points is 3.5",

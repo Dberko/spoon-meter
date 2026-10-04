@@ -50,8 +50,8 @@ function so it holds up at raid-sized lambdas. Per-item dryness is `1 - (1 - p)^
 
 ## Drop rates
 
-Rates live in [`drop_rates.json`](src/main/resources/com/spoonmeter/drop_rates.json), from the OSRS
-Wiki. Drop a `drop_rates.json` into the plugin directory to override it without rebuilding.
+Rates live in [`drop_rates.json`](src/main/resources/com/spoonmeter/drop_rates.json) - 44 sources,
+from the OSRS Wiki. Drop a `drop_rates.json` into the plugin directory to override it without rebuilding.
 
 Pages that count several activities separately declare `variants`, each naming its counter, and
 expectations are summed across them — so 11 normal and 1,487 corrupted Gauntlet runs score at 1/120
