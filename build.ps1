@@ -209,19 +209,63 @@ if ($Run)
     Invoke-Tool $javac @('--release', '11', '-encoding', 'UTF-8', '-nowarn',
         '-cp', "$classpath;$classesDir", '-d', $devDir, "@$launcherArgFile") 'javac (launcher)'
 
-    # In -Run the plugin is already on the classpath, so a side-loaded copy would register a second
-    # instance of the same plugin from a different class loader. Park it while this client runs.
+    # In -Run the plugin is already on the classpath, so any other copy would register a second
+    # instance of the same plugin from a different class loader - two sidebar buttons, both writing
+    # the same files. Park them for the duration and put them back when the client exits.
+    $parked = @()
+
     $installed = Join-Path $sideloadDir 'spoon-meter.jar'
-    if (Test-Path $installed)
+    if (Test-Path $installed) { $parked += $installed }
+
+    # A Plugin Hub install of this same plugin counts too.
+    $hubDir = Join-Path $runeliteDir 'plugins'
+    if (Test-Path $hubDir)
     {
-        $parked = "$installed.disabled"
-        Move-Item $installed $parked -Force
-        Write-Host "parked the side-loaded copy as $(Split-Path $parked -Leaf) so the plugin loads once" -ForegroundColor Yellow
+        $parked += (Get-ChildItem $hubDir -Filter 'spoon-meter_*.jar' | Select-Object -ExpandProperty FullName)
     }
+
+    $moved = @()
+
+    foreach ($jar in $parked)
+    {
+        try
+        {
+            Move-Item $jar "$jar.disabled" -Force -ErrorAction Stop
+            $moved += $jar
+            Write-Host "parked $(Split-Path $jar -Leaf) so the plugin loads once" -ForegroundColor Yellow
+        }
+        catch
+        {
+            # A running client holds its plugin jars open, so this means one is already up.
+            foreach ($done in $moved) { Move-Item "$done.disabled" $done -Force }
+
+            Write-Host ""
+            Write-Host "Could not park $(Split-Path $jar -Leaf) - a RuneLite client is already running" -ForegroundColor Red
+            Write-Host "and holding it open. Close that client and run this again, otherwise the"
+            Write-Host "plugin would load twice: once from the hub jar and once from this build."
+            exit 1
+        }
+    }
+
+    $parked = $moved
 
     Write-Host "starting RuneLite with the plugin loaded..." -ForegroundColor Cyan
     Write-Host "(--debug is on, so the log names every plugin as it loads)" -ForegroundColor DarkGray
-    & $java '-ea' '-cp' "$classpath;$classesDir;$devDir" 'com.spoonmeter.SpoonMeterPluginLauncher' '--developer-mode' '--debug'
+
+    try
+    {
+        & $java '-ea' '-cp' "$classpath;$classesDir;$devDir" 'com.spoonmeter.SpoonMeterPluginLauncher' '--developer-mode' '--debug'
+    }
+    finally
+    {
+        foreach ($jar in $parked)
+        {
+            if (Test-Path "$jar.disabled") { Move-Item "$jar.disabled" $jar -Force }
+        }
+
+        if ($parked) { Write-Host "restored $($parked.Count) parked jar(s)" -ForegroundColor Yellow }
+    }
+
     exit $LASTEXITCODE
 }
 
