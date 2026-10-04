@@ -499,6 +499,174 @@
       ]
     },
     {
+      "name": "Callisto and Artio",
+      "variants": [
+        {
+          "counter": "Callisto kills",
+          "items": [
+            { "name": "Voidwaker hilt", "rate": 360 },
+            { "name": "Tyrannical ring", "rate": 512 },
+            { "name": "Claws of callisto", "rate": 196 },
+            { "name": "Dragon pickaxe", "rate": 256 },
+            { "name": "Callisto cub", "rate": 1500 }
+          ]
+        },
+        {
+          "counter": "Artio kills",
+          "items": [
+            { "name": "Voidwaker hilt", "rate": 912 },
+            { "name": "Tyrannical ring", "rate": 716 },
+            { "name": "Claws of callisto", "rate": 618 },
+            { "name": "Dragon pickaxe", "rate": 358 },
+            { "name": "Callisto cub", "rate": 2800 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vet'ion and Calvar'ion",
+      "variants": [
+        {
+          "counter": "Vet'ion kills",
+          "items": [
+            { "name": "Voidwaker blade", "rate": 360 },
+            { "name": "Ring of the gods", "rate": 512 },
+            { "name": "Skull of vet'ion", "rate": 196 },
+            { "name": "Vet'ion jr", "rate": 1500 }
+          ]
+        },
+        {
+          "counter": "Calvar'ion kills",
+          "items": [
+            { "name": "Voidwaker blade", "rate": 912 },
+            { "name": "Ring of the gods", "rate": 716 },
+            { "name": "Skull of vet'ion", "rate": 618 },
+            { "name": "Vet'ion jr", "rate": 2800 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Venenatis and Spindel",
+      "variants": [
+        {
+          "counter": "Venenatis kills",
+          "items": [
+            { "name": "Voidwaker gem", "rate": 360 },
+            { "name": "Treasonous ring", "rate": 512 },
+            { "name": "Fangs of venenatis", "rate": 196 },
+            { "name": "Venenatis spiderling", "rate": 1500 }
+          ]
+        },
+        {
+          "counter": "Spindel kills",
+          "items": [
+            { "name": "Voidwaker gem", "rate": 912 },
+            { "name": "Treasonous ring", "rate": 716 },
+            { "name": "Fangs of venenatis", "rate": 618 },
+            { "name": "Venenatis spiderling", "rate": 2800 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chaos Fanatic",
+      "items": [
+        { "name": "Odium shard 1", "rate": 256 },
+        { "name": "Malediction shard 1", "rate": 256 },
+        { "name": "Pet chaos elemental", "rate": 1000 }
+      ]
+    },
+    {
+      "name": "Crazy Archaeologist",
+      "items": [
+        { "name": "Odium shard 2", "rate": 256 },
+        { "name": "Malediction shard 2", "rate": 256 },
+        { "name": "Fedora", "rate": 128 }
+      ]
+    },
+    {
+      "name": "Scorpia",
+      "items": [
+        { "name": "Odium shard 3", "rate": 256 },
+        { "name": "Malediction shard 3", "rate": 256 },
+        { "name": "Scorpia's offspring", "rate": 2015.75 }
+      ]
+    },
+    {
+      "name": "Chaos Elemental",
+      "items": [
+        { "name": "Dragon pickaxe", "rate": 256 },
+        { "name": "Dragon 2h sword", "rate": 64 },
+        { "name": "Pet chaos elemental", "rate": 300 }
+      ]
+    },
+    {
+      "name": "Amoxliatl",
+      "items": [
+        { "name": "Glacial temotli", "rate": 100 },
+        { "name": "Moxi", "rate": 3000 }
+      ]
+    },
+    {
+      "name": "Maggot King",
+      "items": [
+        { "name": "Elder venator fang", "rate": 340 },
+        { "name": "Crimson kisten", "rate": 520 },
+        { "name": "Maggot marquess", "rate": 3500 }
+      ]
+    },
+    {
+      "name": "Brutus",
+      "items": [
+        { "name": "Mooleta", "rate": 30 },
+        { "name": "Bottomless milk bucket", "rate": 37.5 },
+        { "name": "Cow slippers", "rate": 150 },
+        { "name": "Beef", "rate": 1000 }
+      ]
+    },
+    {
+      "name": "The Fight Caves",
+      "items": [
+        { "name": "Tzrek-jad", "rate": 200 }
+      ]
+    },
+    {
+      "name": "Barrows Chests",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Barrows Chests opened",
+          "items": [
+        { "name": "Ahrim's hood", "rate": 350.14 },
+        { "name": "Ahrim's robetop", "rate": 350.14 },
+        { "name": "Ahrim's robeskirt", "rate": 350.14 },
+        { "name": "Ahrim's staff", "rate": 350.14 },
+        { "name": "Dharok's helm", "rate": 350.14 },
+        { "name": "Dharok's platebody", "rate": 350.14 },
+        { "name": "Dharok's platelegs", "rate": 350.14 },
+        { "name": "Dharok's greataxe", "rate": 350.14 },
+        { "name": "Guthan's helm", "rate": 350.14 },
+        { "name": "Guthan's platebody", "rate": 350.14 },
+        { "name": "Guthan's chainskirt", "rate": 350.14 },
+        { "name": "Guthan's warspear", "rate": 350.14 },
+        { "name": "Karil's coif", "rate": 350.14 },
+        { "name": "Karil's leathertop", "rate": 350.14 },
+        { "name": "Karil's leatherskirt", "rate": 350.14 },
+        { "name": "Karil's crossbow", "rate": 350.14 },
+        { "name": "Torag's helm", "rate": 350.14 },
+        { "name": "Torag's platebody", "rate": 350.14 },
+        { "name": "Torag's platelegs", "rate": 350.14 },
+        { "name": "Torag's hammers", "rate": 350.14 },
+        { "name": "Verac's helm", "rate": 350.14 },
+        { "name": "Verac's brassard", "rate": 350.14 },
+        { "name": "Verac's plateskirt", "rate": 350.14 },
+        { "name": "Verac's flail", "rate": 350.14 }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Chambers of Xeric",
       "approx": true,
       "variants": [

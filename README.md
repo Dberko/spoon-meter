@@ -50,7 +50,7 @@ function so it holds up at raid-sized lambdas. Per-item dryness is `1 - (1 - p)^
 
 ## Drop rates
 
-Rates live in [`drop_rates.json`](src/main/resources/com/spoonmeter/drop_rates.json) - 44 sources,
+Rates live in [`drop_rates.json`](src/main/resources/com/spoonmeter/drop_rates.json) - 56 sources,
 from the OSRS Wiki. Drop a `drop_rates.json` into the plugin directory to override it without rebuilding.
 
 Pages that count several activities separately declare `variants`, each naming its counter, and
