@@ -117,7 +117,6 @@
         { "name": "Bludgeon claw", "rate": 206 },
         { "name": "Abyssal dagger", "rate": 492 },
         { "name": "Jar of miasma", "rate": 984 },
-        { "name": "Abyssal whip", "rate": 1066 },
         { "name": "Abyssal head", "rate": 1280 },
         { "name": "Abyssal orphan", "rate": 2560 }
       ]
@@ -170,8 +169,18 @@
     {
       "name": "Skotizo",
       "items": [
+        { "name": "Uncut onyx", "rate": 1000 },
         { "name": "Jar of darkness", "rate": 200 },
         { "name": "Skotos", "rate": 65 }
+      ]
+    },
+    {
+      "name": "Zalcano",
+      "approx": true,
+      "items": [
+        { "name": "Uncut onyx", "rate": 8000 },
+        { "name": "Crystal tool seed", "rate": 205 },
+        { "name": "Smolcano", "rate": 2250 }
       ]
     },
     {
@@ -180,6 +189,18 @@
         { "name": "Sarachnis cudgel", "rate": 384 },
         { "name": "Jar of eyes", "rate": 2000 },
         { "name": "Sraracha", "rate": 3000 }
+      ]
+    },
+    {
+      "name": "Wintertodt",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Rewards claimed",
+          "items": [
+            { "name": "Dragon axe", "rate": 10000 }
+          ]
+        }
       ]
     },
     {

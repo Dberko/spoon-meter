@@ -231,6 +231,30 @@ public class SelfCheck
 		check("one visage across two bosses counts once",
 			obtained(source(dragons, "Vorkath"), "Draconic visage")
 				+ obtained(source(dragons, "King Black Dragon"), "Draconic visage") == 1);
+
+		// One uncut onyx, shown in full on all three pages that can drop it.
+		CollectionLogPage zulrah = onyx("Zulrah", "Zulrah kills", 169);
+		CollectionLogPage skotizo = onyx("Skotizo", "Skotizo kills", 3);
+		CollectionLogPage zalcano = onyx("Zalcano", "Zalcano kills", 47);
+
+		SpoonReport onyxes = SpoonReport.build(Arrays.asList(zulrah, skotizo, zalcano),
+			dropTable, chances, 1);
+
+		int counted = obtained(source(onyxes, "Zulrah"), "Uncut onyx")
+			+ obtained(source(onyxes, "Skotizo"), "Uncut onyx")
+			+ obtained(source(onyxes, "Zalcano"), "Uncut onyx");
+
+		check("one onyx across three bosses counts once", counted == 1);
+		check("and goes to the likeliest source",
+			obtained(source(onyxes, "Zulrah"), "Uncut onyx") == 1);
+	}
+
+	private static CollectionLogPage onyx(String name, String counter, int kc)
+	{
+		CollectionLogPage page = new CollectionLogPage(name);
+		page.getCounters().put(counter, kc);
+		page.getItems().put("Uncut onyx", 1);
+		return page;
 	}
 
 	private static CollectionLogPage dt2(String name, String counter, int kc)
