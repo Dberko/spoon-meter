@@ -154,6 +154,19 @@ public class CollectionLogPage
 		return 0;
 	}
 
+	/** Combined quantity of every item in a group that shares one drop slot. */
+	public int quantityOfAny(java.util.List<String> itemNames)
+	{
+		int total = 0;
+
+		for (String itemName : itemNames)
+		{
+			total += quantityOf(itemName);
+		}
+
+		return total;
+	}
+
 	/** Cheap fingerprint used to skip re-saving a page that has not changed since the last tick. */
 	public String fingerprint()
 	{

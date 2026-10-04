@@ -142,13 +142,35 @@ public class DropTable
 	public static class Item
 	{
 		String name;
+
+		/**
+		 * Several items sharing a single drop slot, where which one you get is decided by duplicate
+		 * protection rather than by a separate roll. The brimstone ring pieces work this way: one
+		 * 1/181.1 slot hands out the eye, then the fang, then the heart. Listing them as three
+		 * entries would treble the real rate.
+		 */
+		List<String> names;
+		String label;
+
 		Double rate;
 		Double weight;
 		Double chance;
 
+		/** What the panel shows. */
 		public String getName()
 		{
-			return name;
+			if (name != null)
+			{
+				return name;
+			}
+
+			return label != null ? label : String.join(" / ", getNames());
+		}
+
+		/** Every item name this entry covers. */
+		public List<String> getNames()
+		{
+			return names != null && !names.isEmpty() ? names : Collections.singletonList(name);
 		}
 	}
 

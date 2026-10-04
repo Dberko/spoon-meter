@@ -394,7 +394,7 @@ public class SpoonReport
 
 				accumulator.expected += kc * chance;
 				accumulator.missProbability *= Math.pow(1.0 - chance, kc);
-				accumulator.shown = page.quantityOf(item.getName());
+				accumulator.shown = page.quantityOfAny(item.getNames());
 			}
 		}
 

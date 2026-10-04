@@ -32,6 +32,7 @@ public class SelfCheck
 		splitPages(dropTable);
 		chatLines(dropTable);
 		sharedItems(dropTable);
+		sharedSlots(dropTable);
 
 		System.out.println();
 		System.out.println(checks + " checks, " + failures + " failed");
@@ -247,6 +248,43 @@ public class SelfCheck
 		check("one onyx across three bosses counts once", counted == 1);
 		check("and goes to the likeliest source",
 			obtained(source(onyxes, "Zulrah"), "Uncut onyx") == 1);
+	}
+
+	private static void sharedSlots(DropTable dropTable)
+	{
+		section("Items sharing one drop slot");
+
+		// The brimstone ring pieces come from a single 1/181.1 slot, handed out eye, fang, heart by
+		// duplicate protection. Three separate entries would treble the real rate.
+		CollectionLogPage hydra = new CollectionLogPage("Alchemical Hydra");
+		hydra.getCounters().put("Alchemical Hydra kills", 1811);
+		hydra.getItems().put("Hydra's eye", 1);
+		hydra.getItems().put("Hydra's fang", 1);
+
+		SpoonReport report = SpoonReport.build(Collections.singletonList(hydra),
+			dropTable, new HashMap<>(), 10);
+		SpoonReport.SourceLine line = report.getSources().get(0);
+
+		double pieces = 0;
+		int owned = 0;
+
+		for (SpoonReport.ItemLine item : line.getItems())
+		{
+			if (item.getName().contains("Brimstone"))
+			{
+				pieces = item.getExpected();
+				owned = item.getObtained();
+			}
+		}
+
+		near("1811 kills expects ten ring pieces, not thirty", 10.0, pieces, 0.01);
+		check("both pieces held count toward the one slot", owned == 2);
+		// Hydra's claw is a separate drop and stays its own row; only the ring pieces are grouped.
+		check("the three pieces are one row, not three",
+			line.getItems().stream().filter(i -> i.getName().equals("Hydra's eye")
+				|| i.getName().equals("Hydra's fang") || i.getName().equals("Hydra's heart")).count() == 0);
+		check("and the claw is still its own row",
+			line.getItems().stream().anyMatch(i -> i.getName().equals("Hydra's claw")));
 	}
 
 	private static CollectionLogPage onyx(String name, String counter, int kc)

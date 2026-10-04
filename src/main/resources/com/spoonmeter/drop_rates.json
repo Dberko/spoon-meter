@@ -143,9 +143,7 @@
     {
       "name": "Alchemical Hydra",
       "items": [
-        { "name": "Hydra's eye", "rate": 181.1 },
-        { "name": "Hydra's fang", "rate": 181.1 },
-        { "name": "Hydra's heart", "rate": 181.1 },
+        { "names": ["Hydra's eye", "Hydra's fang", "Hydra's heart"], "label": "Brimstone ring piece", "rate": 181.1 },
         { "name": "Hydra tail", "rate": 513 },
         { "name": "Hydra leather", "rate": 514 },
         { "name": "Hydra's claw", "rate": 1001 },
