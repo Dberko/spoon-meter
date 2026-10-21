@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
@@ -288,11 +289,27 @@ public class SpoonReport
 	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
 		Map<String, Double> uniqueChances, int minKc)
 	{
+		return build(pages, dropTable, uniqueChances, minKc, false, Collections.emptySet());
+	}
+
+	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
+		Map<String, Double> uniqueChances, int minKc, boolean hideCombined)
+	{
+		return build(pages, dropTable, uniqueChances, minKc, hideCombined, Collections.emptySet());
+	}
+
+	/**
+	 * @param hideCombined leave out pages that cover several different bosses at once, where a
+	 *                     single verdict says little about any one of them
+	 */
+	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
+		Map<String, Double> uniqueChances, int minKc, boolean hideCombined, Set<String> hidden)
+	{
 		List<Scored> scored = new ArrayList<>();
 
 		for (CollectionLogPage page : pages)
 		{
-			Scored candidate = expectations(page, dropTable, uniqueChances, minKc);
+			Scored candidate = expectations(page, dropTable, uniqueChances, minKc, hideCombined, hidden);
 
 			if (candidate != null)
 			{
@@ -312,10 +329,20 @@ public class SpoonReport
 			int pageObtained = 0;
 			double pageExpected = 0;
 
+			// Kept item by item, because the score weighs a mega rare more heavily than a common
+			// unique and a page total cannot tell them apart.
+			double[] expectedPerItem = new double[page.items.size()];
+			int[] collectedPerItem = new int[page.items.size()];
+			int index = 0;
+
 			for (Accumulator accumulator : page.items.values())
 			{
 				pageObtained += accumulator.allocated;
 				pageExpected += accumulator.expected;
+
+				expectedPerItem[index] = accumulator.expected;
+				collectedPerItem[index] = accumulator.allocated;
+				index++;
 
 				items.add(new ItemLine(accumulator.name, accumulator.expected / page.kc,
 					accumulator.allocated, accumulator.expected, 1.0 - accumulator.missProbability));
@@ -330,21 +357,49 @@ public class SpoonReport
 			totalExpected += pageExpected;
 
 			lines.add(new SourceLine(page.name, page.counters, page.kc, pageObtained, pageExpected,
-				LuckCalculator.luckPercentile(pageExpected, pageObtained), page.approximate, items));
+				RarityLuck.percentile(expectedPerItem, collectedPerItem), page.approximate, items));
 		}
 
-		double percentile = LuckCalculator.luckPercentile(totalExpected, totalObtained);
-		return new SpoonReport(lines, totalObtained, totalExpected, percentile, pages.size());
+		return new SpoonReport(lines, totalObtained, totalExpected, accountPercentile(lines),
+			pages.size());
+	}
+
+	/**
+	 * The account score is the average of the per-source scores, not one percentile over the pooled
+	 * totals. Pooling sums every source into a single Poisson whose plausible band is proportionally
+	 * tiny - at 400 expected drops, running 13% below rate already reads 0 out of 100 - so any
+	 * shortfall that applies to every source at once, such as loot left on the floor or kills from
+	 * before the log tracked them, pins the score to zero, and each further page tightens the band
+	 * instead of loosening it. Averaging keeps each source's own band, which is wide enough for luck
+	 * to dominate, and lets a spoon at a small boss lift the total the way players expect.
+	 */
+	private static double accountPercentile(List<SourceLine> lines)
+	{
+		if (lines.isEmpty())
+		{
+			return 0.5;
+		}
+
+		double sum = 0;
+
+		for (SourceLine line : lines)
+		{
+			sum += line.getPercentile();
+		}
+
+		return sum / lines.size();
 	}
 
 	/** First pass: what this page's kill counts should have produced, and what the log shows. */
 	@Nullable
 	private static Scored expectations(CollectionLogPage page, DropTable dropTable,
-		Map<String, Double> uniqueChances, int minKc)
+		Map<String, Double> uniqueChances, int minKc, boolean hideCombined, Set<String> hidden)
 	{
 		DropTable.Source source = dropTable.find(page.getName());
 
-		if (source == null)
+		if (source == null
+			|| (hideCombined && source.isCombined())
+			|| hidden.contains(DropTable.normalise(page.getName())))
 		{
 			return null;
 		}

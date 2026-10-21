@@ -5,14 +5,14 @@
     {
       "name": "Zulrah",
       "items": [
-        { "name": "Tanzanite fang", "rate": 1024 },
-        { "name": "Magic fang", "rate": 1024 },
-        { "name": "Serpentine visage", "rate": 1024 },
-        { "name": "Uncut onyx", "rate": 1024 },
+        { "name": "Tanzanite fang", "rate": 512 },
+        { "name": "Magic fang", "rate": 512 },
+        { "name": "Serpentine visage", "rate": 512 },
+        { "name": "Uncut onyx", "rate": 512 },
         { "name": "Jar of swamp", "rate": 3000 },
         { "name": "Pet snakeling", "rate": 4000 },
-        { "name": "Tanzanite mutagen", "rate": 13106 },
-        { "name": "Magma mutagen", "rate": 13106 }
+        { "name": "Tanzanite mutagen", "rate": 6554 },
+        { "name": "Magma mutagen", "rate": 6554 }
       ]
     },
     {
@@ -217,6 +217,7 @@
     },
     {
       "name": "Dagannoth Kings",
+      "combined": true,
       "aliases": ["Dagannoth Rex", "Dagannoth Prime", "Dagannoth Supreme"],
       "variants": [
         {
@@ -264,9 +265,9 @@
       "name": "Vardorvis",
       "items": [
         { "name": "Ultor vestige", "rate": 1088 },
-        { "name": "Awakener's orb", "rate": 80.6 },
         { "name": "Executioner's axe head", "rate": 1088 },
-        { "name": "Chromium ingot", "rate": 362.7 },
+        { "name": "Chromium ingot", "rate": 362.6666667 },
+        { "name": "Awakener's orb", "rate": 80.6 },
         { "name": "Virtus mask", "rate": 3264 },
         { "name": "Virtus robe top", "rate": 3264 },
         { "name": "Virtus robe bottom", "rate": 3264 },
@@ -275,41 +276,41 @@
     },
     {
       "name": "Duke Sucellus",
-      "approx": true,
       "items": [
-        { "name": "Magus vestige", "rate": 1088 },
-        { "name": "Awakener's orb", "rate": 80.6 },
-        { "name": "Eye of the duke", "rate": 1088 },
-        { "name": "Chromium ingot", "rate": 362.7 },
-        { "name": "Virtus mask", "rate": 3264 },
-        { "name": "Virtus robe top", "rate": 3264 },
-        { "name": "Virtus robe bottom", "rate": 3264 }
+        { "name": "Magus vestige", "rate": 720 },
+        { "name": "Eye of the duke", "rate": 720 },
+        { "name": "Chromium ingot", "rate": 240 },
+        { "name": "Awakener's orb", "rate": 48.5 },
+        { "name": "Virtus mask", "rate": 2160 },
+        { "name": "Virtus robe top", "rate": 2160 },
+        { "name": "Virtus robe bottom", "rate": 2160 },
+        { "name": "Baron", "rate": 2500 }
       ]
     },
     {
       "name": "The Leviathan",
-      "approx": true,
       "items": [
-        { "name": "Venator vestige", "rate": 1088 },
-        { "name": "Awakener's orb", "rate": 80.6 },
-        { "name": "Leviathan's lure", "rate": 1088 },
-        { "name": "Chromium ingot", "rate": 362.7 },
-        { "name": "Virtus mask", "rate": 3264 },
-        { "name": "Virtus robe top", "rate": 3264 },
-        { "name": "Virtus robe bottom", "rate": 3264 }
+        { "name": "Venator vestige", "rate": 768 },
+        { "name": "Leviathan's lure", "rate": 768 },
+        { "name": "Chromium ingot", "rate": 256 },
+        { "name": "Awakener's orb", "rate": 53.6 },
+        { "name": "Virtus mask", "rate": 2304 },
+        { "name": "Virtus robe top", "rate": 2304 },
+        { "name": "Virtus robe bottom", "rate": 2304 },
+        { "name": "Lil'viathan", "rate": 2500 }
       ]
     },
     {
       "name": "The Whisperer",
-      "approx": true,
       "items": [
-        { "name": "Bellator vestige", "rate": 1088 },
-        { "name": "Awakener's orb", "rate": 80.6 },
-        { "name": "Siren's staff", "rate": 1088 },
-        { "name": "Chromium ingot", "rate": 362.7 },
-        { "name": "Virtus mask", "rate": 3264 },
-        { "name": "Virtus robe top", "rate": 3264 },
-        { "name": "Virtus robe bottom", "rate": 3264 }
+        { "name": "Bellator vestige", "rate": 512 },
+        { "name": "Siren's staff", "rate": 512 },
+        { "name": "Chromium ingot", "rate": 170.6666667 },
+        { "name": "Awakener's orb", "rate": 34.5 },
+        { "name": "Virtus mask", "rate": 1536 },
+        { "name": "Virtus robe top", "rate": 1536 },
+        { "name": "Virtus robe bottom", "rate": 1536 },
+        { "name": "Wisp", "rate": 2000 }
       ]
     },
     {
@@ -396,8 +397,18 @@
       ]
     },
     {
+      "name": "The Mad Angel",
+      "items": [
+        { "name": "Ardeaglais teleport", "rate": 25 },
+        { "name": "Hallowfell", "rate": 127 },
+        { "name": "Jar of Light", "rate": 1000 },
+        { "name": "Aggy", "rate": 2000 }
+      ]
+    },
+    {
       "name": "Royal Titans",
       "items": [
+        { "name": "Giantsoul amulet", "rate": 16 },
         { "name": "Deadeye prayer scroll", "rate": 75 },
         { "name": "Mystic vigour prayer scroll", "rate": 75 },
         { "name": "Ice element staff crown", "rate": 75 },
@@ -498,6 +509,7 @@
     },
     {
       "name": "Callisto and Artio",
+      "combined": true,
       "variants": [
         {
           "counter": "Callisto kills",
@@ -523,6 +535,7 @@
     },
     {
       "name": "Vet'ion and Calvar'ion",
+      "combined": true,
       "variants": [
         {
           "counter": "Vet'ion kills",
@@ -546,6 +559,7 @@
     },
     {
       "name": "Venenatis and Spindel",
+      "combined": true,
       "variants": [
         {
           "counter": "Venenatis kills",

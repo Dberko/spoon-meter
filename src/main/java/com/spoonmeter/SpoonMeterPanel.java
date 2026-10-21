@@ -31,6 +31,7 @@ public class SpoonMeterPanel extends PluginPanel
 	private final JPanel sourceList = new JPanel(new DynamicGridLayout(0, 1, 0, 5));
 	private final JComboBox<SortMode> sortBox = new JComboBox<>(SortMode.values());
 	private final JLabel footerLabel = new JLabel();
+	private final JButton showHiddenButton = new JButton();
 
 	private SpoonReport report;
 	private boolean updatingSortBox;
@@ -130,7 +131,15 @@ public class SpoonMeterPanel extends PluginPanel
 
 		footerLabel.setFont(FontManager.getRunescapeSmallFont());
 		footerLabel.setForeground(ColorScheme.MEDIUM_GRAY_COLOR);
+
+		showHiddenButton.setFocusable(false);
+		showHiddenButton.setFont(FontManager.getRunescapeSmallFont());
+		showHiddenButton.setToolTipText("Put every hidden boss back in the list");
+		showHiddenButton.setVisible(false);
+		showHiddenButton.addActionListener(e -> plugin.clearHiddenSources());
+
 		footer.add(footerLabel, BorderLayout.CENTER);
+		footer.add(showHiddenButton, BorderLayout.SOUTH);
 		return footer;
 	}
 
@@ -168,12 +177,18 @@ public class SpoonMeterPanel extends PluginPanel
 
 		for (SpoonReport.SourceLine source : sources)
 		{
-			sourceList.add(new SourceRow(source));
+			sourceList.add(new SourceRow(source, plugin::hideSource));
 		}
+
+		int hidden = plugin.hiddenCount();
 
 		footerLabel.setText("<html>" + sources.size() + " rated of " + report.getPagesSeen()
 			+ " pages read.<br>Open more collection log pages to feed the meter."
+			+ (hidden > 0 ? "<br>" + hidden + " boss" + (hidden == 1 ? "" : "es") + " hidden." : "")
 			+ "<br>* rates vary with team size or points.</html>");
+
+		showHiddenButton.setVisible(hidden > 0);
+		showHiddenButton.setText("Show " + hidden + " hidden");
 
 		sourceList.revalidate();
 		sourceList.repaint();

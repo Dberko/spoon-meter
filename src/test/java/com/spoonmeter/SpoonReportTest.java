@@ -34,15 +34,15 @@ public class SpoonReportTest
 		SpoonReport report = build(zulrah(1024, 1), 10);
 
 		assertEquals(1, report.getObtained());
-		assertEquals(4.75, report.getExpected(), 0.05);
+		assertEquals(8.91, report.getExpected(), 0.05);
 		assertTrue("should read as cursed, was " + report.getPercentile(), report.getPercentile() < 0.1);
-		assertEquals(LuckRating.HARD_CURSED, report.getRating());
+		assertEquals(LuckRating.RNG_HATES_YOU, report.getRating());
 	}
 
 	@Test
-	public void nineUniquesInAThousandZulrahIsSpooned()
+	public void sixteenUniquesInAThousandZulrahIsSpooned()
 	{
-		SpoonReport report = build(zulrah(1024, 9), 10);
+		SpoonReport report = build(zulrah(1024, 16), 10);
 
 		assertTrue("should read as spooned, was " + report.getPercentile(), report.getPercentile() > 0.9);
 	}
@@ -77,9 +77,9 @@ public class SpoonReportTest
 		SpoonReport.ItemLine driest = sources.get(0).getDriestMissing();
 
 		assertNotNull(driest);
-		// Four items share the 1/1024 rate, so any of them is a fair answer; what matters is that it
+		// Four items share the 1/512 rate, so any of them is a fair answer; what matters is that it
 		// is one of those and not the 1/13106 mutagen.
-		assertTrue(driest.getChance() >= 1.0 / 1024);
+		assertTrue(driest.getChance() >= 1.0 / 512);
 		assertTrue(driest.getDryness() > 0.98);
 	}
 
@@ -113,7 +113,7 @@ public class SpoonReportTest
 		return SpoonReport.build(Collections.singletonList(page), dropTable, uniqueChances, minKc);
 	}
 
-	/** A Zulrah page with {@code uniques} spread over its 1/1024 drops. */
+	/** A Zulrah page with {@code uniques} spread over its 1/512 drops. */
 	private static CollectionLogPage zulrah(int kc, int uniques)
 	{
 		CollectionLogPage page = new CollectionLogPage("Zulrah");

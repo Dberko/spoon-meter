@@ -66,6 +66,28 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "hideCombinedPages",
+		name = "Hide combined boss pages",
+		description = "Leave out log pages that cover several different bosses at once - Callisto and Artio, the Dagannoth Kings and the other wilderness pairs. One verdict across two bosses says little about either, so this drops them from the list and from your account total",
+		position = 5
+	)
+	default boolean hideCombinedPages()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "hiddenSources",
+		name = "Hidden bosses",
+		description = "Bosses left out of the list and the account total, separated by commas. Right-click a boss in the panel to add one, or edit the list here",
+		position = 6
+	)
+	default String hiddenSources()
+	{
+		return "";
+	}
+
+	@ConfigItem(
 		keyName = "doomUniqueChance",
 		name = "Doom unique chance",
 		description = "Your average chance of a unique per delve at Doom of Mokhaiotl. It climbs with depth: about 0.1 at delve 3, 0.39 at delve 6, 0.56 at delve 9 and beyond",

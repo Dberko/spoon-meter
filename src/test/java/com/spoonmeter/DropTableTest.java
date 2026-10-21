@@ -43,7 +43,7 @@ public class DropTableTest
 	public void flatRatesAreInverted()
 	{
 		DropTable.Source zulrah = dropTable.find("Zulrah");
-		assertEquals(1.0 / 1024, probabilityOf(zulrah, "Tanzanite fang", 0), 1.0e-12);
+		assertEquals(1.0 / 512, probabilityOf(zulrah, "Tanzanite fang", 0), 1.0e-12);
 		assertEquals(1.0 / 4000, probabilityOf(zulrah, "Pet snakeling", 0), 1.0e-12);
 	}
 

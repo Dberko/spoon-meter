@@ -33,6 +33,12 @@ public class SelfCheck
 		chatLines(dropTable);
 		sharedItems(dropTable);
 		sharedSlots(dropTable);
+		perBossRates(dropTable);
+		hidingCombinedPages(dropTable);
+		hidingBosses(dropTable);
+		effectiveRates(dropTable);
+		accountScore(dropTable);
+		rarityNotJustCount(dropTable);
 
 		System.out.println();
 		System.out.println(checks + " checks, " + failures + " failed");
@@ -119,8 +125,9 @@ public class SelfCheck
 		near("and both rate tables are blended", 65.25, line.getExpected(), 0.05);
 		check("the cape is not counted as a drop", line.getObtained() == 52);
 		check("52 uniques against 65 expected reads as dry", line.getPercentile() < 0.10);
-		check("which is cursed, not spooned", line.getRating() == LuckRating.CURSED
-			|| line.getRating() == LuckRating.HARD_CURSED);
+		check("which lands at the cursed end, not the spooned one",
+			line.getRating() == LuckRating.CURSED || line.getRating() == LuckRating.HARD_CURSED
+				|| line.getRating() == LuckRating.RNG_HATES_YOU);
 
 		CollectionLogPage kings = new CollectionLogPage("Dagannoth Kings");
 		kings.getCounters().put("Dagannoth Rex kills", 70);
@@ -206,7 +213,11 @@ public class SelfCheck
 
 		check("the page that earned it gets the credit", obtained(vard, "Virtus robe top") == 1);
 		check("and the one-kill page gets none", obtained(whisp, "Virtus robe top") == 0);
-		check("the stale ingot count does not win", obtained(vard, "Chromium ingot") == 2);
+		// The Whisperer page was read earlier and shows only one ingot; the pool must take the
+		// freshest count, two, not the stale one. Which pages it lands on follows their rates.
+		check("the stale ingot count does not win",
+			obtained(vard, "Chromium ingot") + obtained(source(report, "Duke Sucellus"), "Chromium ingot")
+				+ obtained(whisp, "Chromium ingot") == 2);
 
 		check("so one kill no longer looks spooned", whisp.getObtained() == 0);
 		System.out.println("      Whisperer: " + whisp.getObtained() + " vs "
@@ -248,6 +259,278 @@ public class SelfCheck
 		check("one onyx across three bosses counts once", counted == 1);
 		check("and goes to the likeliest source",
 			obtained(source(onyxes, "Zulrah"), "Uncut onyx") == 1);
+	}
+
+	private static void hidingCombinedPages(DropTable dropTable)
+	{
+		section("Hiding combined boss pages");
+
+		CollectionLogPage kings = new CollectionLogPage("Dagannoth Kings");
+		kings.getCounters().put("Dagannoth Rex kills", 70);
+		kings.getItems().put("Berserker ring", 1);
+
+		CollectionLogPage zulrah = zulrah(1024, 2);
+		Map<String, Double> chances = new HashMap<>();
+
+		SpoonReport shown = SpoonReport.build(Arrays.asList(kings, zulrah), dropTable, chances, 10, false);
+		SpoonReport hidden = SpoonReport.build(Arrays.asList(kings, zulrah), dropTable, chances, 10, true);
+
+		check("shown by default", shown.getSources().size() == 2);
+		check("hidden when asked", hidden.getSources().size() == 1);
+		check("and it is the combined page that goes",
+			hidden.getSources().get(0).getName().equals("Zulrah"));
+		check("its uniques leave the account total too",
+			hidden.getObtained() < shown.getObtained());
+		check("pages read is still reported honestly", hidden.getPagesSeen() == 2);
+
+		// A page covering one boss in several modes is not a combined page.
+		check("the Gauntlet is not treated as combined",
+			!dropTable.find("The Gauntlet").isCombined());
+		check("nor are the raids", !dropTable.find("Chambers of Xeric").isCombined());
+	}
+
+	private static void effectiveRates(DropTable dropTable)
+	{
+		section("Effective rates, not per-roll ones");
+
+		// Zulrah rolls its table twice per kill, so the per-roll figures the wiki also prints are
+		// half the real chance. The giveaway is that the uniques must sum to the table rate.
+		DropTable.Source zulrah = dropTable.find("Zulrah");
+		double table = 1 / rateOf(zulrah, "Tanzanite fang") + 1 / rateOf(zulrah, "Magic fang")
+			+ 1 / rateOf(zulrah, "Serpentine visage") + 1 / rateOf(zulrah, "Uncut onyx");
+
+		near("Zulrah's uniques sum to its 1/128 table", 128.0, 1 / table, 0.01);
+		near("so a specific one is 1/512", 512.0, rateOf(zulrah, "Tanzanite fang"), 0.01);
+		near("and a mutagen 1/6554", 6554.0, rateOf(zulrah, "Magma mutagen"), 1.0);
+
+		// Tertiaries roll once, so these were never doubled.
+		near("the jar stays tertiary", 3000.0, rateOf(zulrah, "Jar of swamp"), 0.01);
+		near("and so does the pet", 4000.0, rateOf(zulrah, "Pet snakeling"), 0.01);
+
+		// Same shape of check for the hydra, whose components share one slot.
+		DropTable.Source hydra = dropTable.find("Alchemical Hydra");
+		double hydraTable = 1 / rateOf(hydra, "Brimstone ring piece") + 1 / rateOf(hydra, "Hydra tail")
+			+ 1 / rateOf(hydra, "Hydra leather") + 1 / rateOf(hydra, "Hydra's claw");
+
+		check("the hydra's uniques stay under its 1/87.6 table", 1 / hydraTable > 87.0);
+	}
+
+	/**
+	 * The account score averages the per-source scores. It used to be one percentile over the pooled
+	 * totals, which saturated: every source landed in one Poisson whose band was proportionally tiny,
+	 * so a shortfall shared by all of them pinned the score to zero and further pages only tightened
+	 * it. These checks hold the averaging in place.
+	 */
+	private static void accountScore(DropTable dropTable)
+	{
+		section("The account score averages its sources");
+
+		Map<String, Double> chances = new HashMap<>();
+
+		// Both well below rate: 2 uniques against 8 expected, and 1 visage against roughly 1.4.
+		CollectionLogPage zulrah = zulrah(1024, 2);
+		CollectionLogPage vorkath = new CollectionLogPage("Vorkath");
+		vorkath.getCounters().put("Vorkath kills", 7000);
+		vorkath.getItems().put("Draconic visage", 1);
+
+		SpoonReport report = SpoonReport.build(Arrays.asList(zulrah, vorkath), dropTable, chances, 10);
+		check("both sources are rated", report.getSources().size() == 2);
+
+		double mean = 0;
+		for (SpoonReport.SourceLine line : report.getSources())
+		{
+			mean += line.getPercentile();
+		}
+		mean /= report.getSources().size();
+
+		near("the score is the mean of its sources", mean, report.getPercentile(), 1.0e-9);
+
+		// The old pooled figure, kept here as the thing being avoided rather than reproduced.
+		double pooled = LuckCalculator.luckPercentile(report.getExpected(), report.getObtained());
+		check("which beats pooling the totals", report.getPercentile() > pooled);
+
+		// A spoon at one source lifts the account, where pooling would have drowned it in the rest.
+		CollectionLogPage spooned = new CollectionLogPage("Vorkath");
+		spooned.getCounters().put("Vorkath kills", 7000);
+		spooned.getItems().put("Draconic visage", 5);
+
+		SpoonReport lucky = SpoonReport.build(Arrays.asList(zulrah, spooned), dropTable, chances, 10);
+		check("a spoon at one source lifts the account", lucky.getPercentile() > report.getPercentile());
+
+		// The bug report was an account that sat at zero and would not move. Being somewhat below
+		// rate has to stay somewhere on the scale: 7 uniques against 8 expected is ordinary dryness.
+		SpoonReport ordinary = SpoonReport.build(Collections.singletonList(zulrah(1024, 7)),
+			dropTable, chances, 10);
+
+		check("ordinary dryness is not a zero", ordinary.getSpoonScore() > 5);
+		check("but still reads dry", ordinary.getSpoonScore() < 50);
+
+		// An average cannot leave the range it averages over. Pooling could and did, which is how a
+		// run of unremarkable sources added up to a verdict worse than any of them.
+		double worst = 1;
+		double best = 0;
+		for (SpoonReport.SourceLine line : report.getSources())
+		{
+			worst = Math.min(worst, line.getPercentile());
+			best = Math.max(best, line.getPercentile());
+		}
+
+		check("the account never scores below its worst source", report.getPercentile() >= worst);
+		check("nor above its best", report.getPercentile() <= best);
+	}
+
+	/**
+	 * A count cannot tell a mega rare from a common unique. Three Tumeken's shadows and three
+	 * Lightbearers are both "three purples" even though the shadow is five times rarer, and scoring
+	 * the count alone called them identical.
+	 */
+	private static void rarityNotJustCount(DropTable dropTable)
+	{
+		section("Rarity, not just how many");
+
+		Map<String, Double> chances = new HashMap<>();
+		chances.put("toa", 0.05);
+
+		SpoonReport.SourceLine shadows = only(toa(128, "Tumeken's shadow", 3), dropTable, chances);
+		SpoonReport.SourceLine lesser = only(toa(128, "Lightbearer", 3), dropTable, chances);
+
+		// Whatever the verdicts are, the counting figures have to be identical, which is the whole
+		// problem: the old score could not separate these two accounts at all.
+		check("both accounts hold three purples", shadows.getObtained() == 3
+			&& lesser.getObtained() == 3);
+		near("against the same expectation", shadows.getExpected(), lesser.getExpected(), 1.0e-9);
+
+		check("three shadows beat three lightbearers", shadows.getPercentile() > lesser.getPercentile());
+		check("and by a wide margin, not a rounding error",
+			LuckRating.spoonScore(shadows.getPercentile())
+				- LuckRating.spoonScore(lesser.getPercentile()) > 15);
+
+		// One mega rare against one common one, at the same kill count.
+		SpoonReport.SourceLine oneShadow = only(toa(60, "Tumeken's shadow", 1), dropTable, chances);
+		SpoonReport.SourceLine oneFang = only(toa(60, "Osmumten's fang", 1), dropTable, chances);
+		check("one shadow beats one fang", oneShadow.getPercentile() > oneFang.getPercentile());
+
+		// The plain count still has to move the verdict, or the score becomes a pet lottery.
+		SpoonReport.SourceLine four = only(zulrah(1024, 4), dropTable, chances);
+		SpoonReport.SourceLine eight = only(zulrah(1024, 8), dropTable, chances);
+		SpoonReport.SourceLine twelve = only(zulrah(1024, 12), dropTable, chances);
+
+		check("four uniques in 1024 is worse than eight", four.getPercentile() < eight.getPercentile());
+		check("and eight is worse than twelve", eight.getPercentile() < twelve.getPercentile());
+		check("twelve against eight expected reads lucky",
+			LuckRating.spoonScore(twelve.getPercentile()) > 55);
+
+		// Simulated, so it must not wander between panel refreshes.
+		check("the score is the same on a second look",
+			only(toa(128, "Tumeken's shadow", 3), dropTable, chances).getPercentile()
+				== shadows.getPercentile());
+	}
+
+	private static CollectionLogPage toa(int kc, String item, int count)
+	{
+		CollectionLogPage page = new CollectionLogPage("Tombs of Amascut");
+		page.getCounters().put("Tombs of Amascut completions", kc);
+		page.getItems().put(item, count);
+		return page;
+	}
+
+	private static SpoonReport.SourceLine only(CollectionLogPage page, DropTable dropTable,
+		Map<String, Double> chances)
+	{
+		return SpoonReport.build(Collections.singletonList(page), dropTable, chances, 10)
+			.getSources().get(0);
+	}
+
+	private static void hidingBosses(DropTable dropTable)
+	{
+		section("Hiding individual bosses");
+
+		CollectionLogPage zulrah = zulrah(1024, 2);
+		CollectionLogPage vorkath = new CollectionLogPage("Vorkath");
+		vorkath.getCounters().put("Vorkath kills", 1000);
+		vorkath.getItems().put("Draconic visage", 1);
+
+		Map<String, Double> chances = new HashMap<>();
+		SpoonReport all = SpoonReport.build(Arrays.asList(zulrah, vorkath), dropTable, chances, 10);
+
+		Set<String> hidden = new HashSet<>(Collections.singletonList(DropTable.normalise("Zulrah")));
+		SpoonReport some = SpoonReport.build(Arrays.asList(zulrah, vorkath), dropTable, chances, 10,
+			false, hidden);
+
+		check("both rated to begin with", all.getSources().size() == 2);
+		check("the hidden one is gone", some.getSources().size() == 1);
+		check("and the other one stays", some.getSources().get(0).getName().equals("Vorkath"));
+		check("its uniques leave the total", some.getObtained() < all.getObtained());
+
+		// The point of hiding: a boss you have dropped must stop moving the verdict, so its
+		// expectation has to leave the total as well, not just its row leave the list.
+		check("and so does its expectation", some.getExpected() < all.getExpected());
+		check("which moves the score", some.getSpoonScore() != all.getSpoonScore());
+		check("upward, having dropped a dry page", some.getSpoonScore() > all.getSpoonScore());
+		check("pages read is unchanged", some.getPagesSeen() == 2);
+
+		// Stored names are matched loosely, so the config does not need exact spelling.
+		Set<String> loose = new HashSet<>(Collections.singletonList(DropTable.normalise("zulrah")));
+		check("matching ignores case",
+			SpoonReport.build(Arrays.asList(zulrah, vorkath), dropTable, chances, 10, false, loose)
+				.getSources().size() == 1);
+
+		check("hiding nothing changes nothing",
+			SpoonReport.build(Arrays.asList(zulrah, vorkath), dropTable, chances, 10, false,
+				Collections.emptySet()).getSources().size() == 2);
+	}
+
+	private static void perBossRates(DropTable dropTable)
+	{
+		section("Rates that differ between bosses");
+
+		// The four Desert Treasure bosses do not share a rate card: each has its own unique table,
+		// and every unique scales with it. Copying one boss's rates onto the others made the orb
+		// look 1.7x rarer at Duke and 2.3x rarer at the Whisperer than it is.
+		double[][] expected = {
+			// unique table, vestige/weapon, each virtus, orb
+			{136, 1088, 3264, 80.6},
+			{90, 720, 2160, 48.5},
+			{96, 768, 2304, 53.6},
+			{64, 512, 1536, 34.5},
+		};
+		String[] names = {"Vardorvis", "Duke Sucellus", "The Leviathan", "The Whisperer"};
+		String[] vestiges = {"Ultor vestige", "Magus vestige", "Venator vestige", "Bellator vestige"};
+
+		boolean ok = true;
+
+		for (int i = 0; i < names.length; i++)
+		{
+			DropTable.Source source = dropTable.find(names[i]);
+			ok &= Math.abs(rateOf(source, vestiges[i]) - expected[i][1]) < 0.01;
+			ok &= Math.abs(rateOf(source, "Virtus mask") - expected[i][2]) < 0.01;
+			ok &= Math.abs(rateOf(source, "Awakener's orb") - expected[i][3]) < 0.01;
+
+			// The wiki's own structure: the vestige is the table rate over eight, virtus over 24.
+			ok &= Math.abs(rateOf(source, vestiges[i]) - expected[i][0] * 8) < 0.01;
+			ok &= Math.abs(rateOf(source, "Virtus mask") - expected[i][0] * 24) < 0.01;
+		}
+
+		check("every Desert Treasure boss carries its own rates", ok);
+		check("the orb is not the same at all four",
+			rateOf(dropTable.find("The Whisperer"), "Awakener's orb")
+				!= rateOf(dropTable.find("Vardorvis"), "Awakener's orb"));
+	}
+
+	private static double rateOf(DropTable.Source source, String item)
+	{
+		for (DropTable.Variant variant : source.getVariants())
+		{
+			for (DropTable.Item candidate : variant.getItems())
+			{
+				if (DropTable.normalise(candidate.getName()).equals(DropTable.normalise(item)))
+				{
+					return candidate.rate == null ? -1 : candidate.rate;
+				}
+			}
+		}
+
+		return -1;
 	}
 
 	private static void sharedSlots(DropTable dropTable)
@@ -416,7 +699,7 @@ public class SelfCheck
 		check("no stack drops are rated as uniques", noStackDrops);
 
 		DropTable.Source zulrah = dropTable.find("Zulrah");
-		near("Tanzanite fang is 1/1024", 1.0 / 1024, probabilityOf(zulrah, "Tanzanite fang", 0), 1e-12);
+		near("Tanzanite fang is 1/512", 1.0 / 512, probabilityOf(zulrah, "Tanzanite fang", 0), 1e-12);
 
 		DropTable.Source cox = dropTable.find("Chambers of Xeric");
 		near("Twisted bow is 2/60 of a purple", 0.035 * 2 / 60, probabilityOf(cox, "Twisted bow", 0.035), 1e-12);
@@ -432,12 +715,12 @@ public class SelfCheck
 		chances.put("toa", 0.12);
 
 		SpoonReport cursed = SpoonReport.build(Collections.singletonList(zulrah(1024, 1)), dropTable, chances, 10);
-		near("1024 Zulrah expects ~4.75 uniques", 4.75, cursed.getExpected(), 0.05);
+		near("1024 Zulrah expects ~8.9 uniques", 8.91, cursed.getExpected(), 0.05);
 		check("1 unique in 1024 reads as cursed", cursed.getPercentile() < 0.1);
-		check("and lands in Hard Cursed", cursed.getRating() == LuckRating.HARD_CURSED);
+		check("and lands at the bottom of the scale", cursed.getRating() == LuckRating.RNG_HATES_YOU);
 
-		SpoonReport spooned = SpoonReport.build(Collections.singletonList(zulrah(1024, 9)), dropTable, chances, 10);
-		check("9 uniques in 1024 reads as spooned", spooned.getPercentile() > 0.9);
+		SpoonReport spooned = SpoonReport.build(Collections.singletonList(zulrah(1024, 16)), dropTable, chances, 10);
+		check("16 uniques in 1024 reads as spooned", spooned.getPercentile() > 0.9);
 
 		check("5 kc is ignored", SpoonReport.build(Collections.singletonList(zulrah(5, 0)), dropTable, chances, 10).isEmpty());
 		check("50 kc is rated", !SpoonReport.build(Collections.singletonList(zulrah(50, 0)), dropTable, chances, 10).isEmpty());
@@ -451,7 +734,7 @@ public class SelfCheck
 		SpoonReport dry = SpoonReport.build(Collections.singletonList(zulrah(4096, 0)), dropTable, chances, 10);
 		SpoonReport.ItemLine driest = dry.getSources().get(0).getDriestMissing();
 		check("the driest missing item is called out", driest != null);
-		check("and it is one of the 1/1024 drops", driest != null && driest.getChance() >= 1.0 / 1024);
+		check("and it is one of the 1/512 drops", driest != null && driest.getChance() >= 1.0 / 512);
 
 		CollectionLogPage tob = new CollectionLogPage("Theatre of Blood");
 		tob.getCounters().put("Theatre of Blood completions", 300);

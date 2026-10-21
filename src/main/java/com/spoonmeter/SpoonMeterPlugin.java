@@ -8,10 +8,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -294,6 +298,42 @@ public class SpoonMeterPlugin extends Plugin
 		commandRegistered = wanted;
 	}
 
+	/** Names the user has hidden, normalised so the stored spelling does not have to be exact. */
+	private Set<String> hiddenSources()
+	{
+		Set<String> hidden = new HashSet<>();
+
+		for (String name : Text.fromCSV(config.hiddenSources()))
+		{
+			hidden.add(DropTable.normalise(name));
+		}
+
+		return hidden;
+	}
+
+	/** Called by the panel when a boss is hidden from its right-click menu. */
+	void hideSource(String name)
+	{
+		List<String> names = new ArrayList<>(Text.fromCSV(config.hiddenSources()));
+
+		if (names.stream().noneMatch(existing -> DropTable.normalise(existing).equals(DropTable.normalise(name))))
+		{
+			names.add(name);
+			configManager.setConfiguration(SpoonMeterConfig.GROUP, "hiddenSources", Text.toCSV(names));
+		}
+	}
+
+	/** Called by the panel's footer when the user wants them all back. */
+	void clearHiddenSources()
+	{
+		configManager.setConfiguration(SpoonMeterConfig.GROUP, "hiddenSources", "");
+	}
+
+	int hiddenCount()
+	{
+		return hiddenSources().size();
+	}
+
 	/** Called by the panel when the user picks a different sort order. */
 	void setSortMode(SortMode sortMode)
 	{
@@ -341,7 +381,8 @@ public class SpoonMeterPlugin extends Plugin
 		uniqueChances.put("toaexpert", config.toaExpertUniqueChance() / 100.0);
 		uniqueChances.put("doom", config.doomUniqueChance() / 100.0);
 
-		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc());
+		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc(),
+			config.hideCombinedPages(), hiddenSources());
 	}
 
 	private void refreshPanel()

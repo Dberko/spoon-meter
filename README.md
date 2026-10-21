@@ -71,6 +71,11 @@ deliberately excluded, since the log records items received rather than drops.
 - **Sets that share a slot are one entry.** The brimstone ring pieces come from a single 1/181.1
   roll handed out eye, then fang, then heart, so they are listed once with `names` rather than three
   times - which would treble the rate. Tables with genuine per-item rolls stay separate.
+- **Any boss can be hidden.** Right-click it in the panel to drop it from the list and the account
+  total; the footer offers them back. The list lives in the config if you would rather edit it.
+- **Pages covering several bosses can be hidden.** Callisto and Artio, the Dagannoth Kings and the
+  other wilderness pairs share one page, and a single verdict across two bosses says little about
+  either. **Hide combined boss pages** in the config drops them from the list and the total.
 - KC is a proxy for rolls, and loot left on the floor was never seen by the log.
 - Duplicate protection (Araxxor halberd pieces, DT2 vestiges) is modelled as independent rolls.
 - A single rare drop swings one page hard at low KC; the account figure is far steadier.

@@ -48,6 +48,9 @@ public class DropTable
 		List<String> aliases;
 		boolean approx;
 
+		/** One page covering several different bosses, such as Callisto and Artio. */
+		boolean combined;
+
 		// Simple form: one implicit variant.
 		String counter;
 		String uniqueChanceKey;
@@ -67,6 +70,11 @@ public class DropTable
 		public boolean isApprox()
 		{
 			return approx;
+		}
+
+		public boolean isCombined()
+		{
+			return combined;
 		}
 
 		/** The split variants, or a single synthesised one for a simple source. */

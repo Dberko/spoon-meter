@@ -2,13 +2,19 @@ package com.spoonmeter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
@@ -30,7 +36,7 @@ class SourceRow extends JPanel
 	private final JPanel details;
 	private boolean expanded;
 
-	SourceRow(SpoonReport.SourceLine line)
+	SourceRow(SpoonReport.SourceLine line, Consumer<String> onHide)
 	{
 		setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARKER_GRAY_COLOR);
@@ -85,11 +91,28 @@ class SourceRow extends JPanel
 
 		setToolTipText(buildTooltip(line));
 
+		// Right-click to drop a boss you do not care about out of the list and the total.
+		JPopupMenu menu = new JPopupMenu();
+		JMenuItem hide = new JMenuItem("Hide " + line.getName());
+		hide.addActionListener(e -> onHide.accept(line.getName()));
+		menu.add(hide);
+		setComponentPopupMenu(menu);
+
+		// Children do not inherit a popup menu by default, so without this a right-click that
+		// happens to land on a label inside the row would do nothing at all.
+		inheritPopup(this);
+
 		addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
+				// Right-click belongs to the hide menu; only the left button expands the row.
+				if (!SwingUtilities.isLeftMouseButton(e))
+				{
+					return;
+				}
+
 				expanded = !expanded;
 				details.setVisible(expanded);
 				revalidate();
@@ -183,6 +206,20 @@ class SourceRow extends JPanel
 		}
 
 		return panel;
+	}
+
+	/** Lets the row's popup menu answer a right-click anywhere inside it. */
+	private static void inheritPopup(JComponent parent)
+	{
+		for (Component child : parent.getComponents())
+		{
+			if (child instanceof JComponent)
+			{
+				JComponent component = (JComponent) child;
+				component.setInheritsPopupMenu(true);
+				inheritPopup(component);
+			}
+		}
 	}
 
 	@Override
