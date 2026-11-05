@@ -39,6 +39,7 @@ public class SelfCheck
 		effectiveRates(dropTable);
 		accountScore(dropTable);
 		rarityNotJustCount(dropTable);
+		minigameRolls(dropTable);
 
 		System.out.println();
 		System.out.println(checks + " checks, " + failures + " failed");
@@ -439,6 +440,87 @@ public class SelfCheck
 	{
 		return SpoonReport.build(Collections.singletonList(page), dropTable, chances, 10)
 			.getSources().get(0);
+	}
+
+	/**
+	 * A minigame can hand out its rewards per reward roll rather than per completion, and the
+	 * collection log counts completions. Guardians of the Rift is the awkward case: its rates are
+	 * per search of the Rewards Guardian, a search costs points, and the log counts rifts.
+	 */
+	private static void minigameRolls(DropTable dropTable)
+	{
+		section("Minigames rolled more than once a completion");
+
+		// The minigames whose roll count the log does record must stay on those counters.
+		DropTable.Source tempoross = dropTable.find("Tempoross");
+		check("Tempoross counts reward permits, not kills",
+			"Reward permits claimed".equals(tempoross.getVariants().get(0).getCounter()));
+		check("Wintertodt counts crates, not kills",
+			"Rewards claimed".equals(dropTable.find("Wintertodt").getVariants().get(0).getCounter()));
+
+		DropTable.Source gotr = dropTable.find("Guardians of the Rift");
+		check("Guardians of the Rift is rated", gotr != null);
+		check("and answers to GOTR", dropTable.find("GOTR") != null);
+		check("its rolls come from the config", "gotrsearches".equals(
+			gotr.getVariants().get(0).getRollsPerKcKey()));
+
+		CollectionLogPage page = new CollectionLogPage("Guardians of the Rift");
+		page.getCounters().put("Rifts closed", 500);
+		page.getItems().put("Catalytic talisman", 12);
+
+		Map<String, Double> eight = new HashMap<>();
+		eight.put("gotrsearches", 8.0);
+		SpoonReport.SourceLine line = only(page, dropTable, eight);
+
+		// 500 rifts at 8 searches is 4000 searches, and the talisman is 1/200 of one.
+		near("4000 searches expect 20 talismans", 20.0, itemExpected(line, "Catalytic talisman"), 0.01);
+		check("the panel still shows rifts, not searches", line.getKc() == 500);
+
+		Map<String, Double> sixteen = new HashMap<>();
+		sixteen.put("gotrsearches", 16.0);
+		near("twice the searches, twice the expectation", 40.0,
+			itemExpected(only(page, dropTable, sixteen), "Catalytic talisman"), 0.01);
+
+		// Nobody should be scored against a guess they have not made.
+		Map<String, Double> none = new HashMap<>();
+		none.put("gotrsearches", 0.0);
+		check("zero searches leaves it unrated",
+			SpoonReport.build(Collections.singletonList(page), dropTable, none, 10).isEmpty());
+		check("and so does leaving it unset",
+			SpoonReport.build(Collections.singletonList(page), dropTable, new HashMap<>(), 10)
+				.isEmpty());
+
+		// Bought with pearls rather than dropped, so they are not luck and must stay out.
+		for (String bought : new String[]{"Hat of the Eye", "Robe top of the Eye", "Boots of the Eye",
+			"Guardian's eye", "Ring of the elements"})
+		{
+			check(bought + " is not scored as a drop", !names(gotr).contains(DropTable.normalise(bought)));
+		}
+	}
+
+	private static Set<String> names(DropTable.Source source)
+	{
+		Set<String> out = new HashSet<>();
+
+		for (DropTable.Item item : source.getItems())
+		{
+			out.add(DropTable.normalise(item.getName()));
+		}
+
+		return out;
+	}
+
+	private static double itemExpected(SpoonReport.SourceLine line, String item)
+	{
+		for (SpoonReport.ItemLine candidate : line.getItems())
+		{
+			if (DropTable.normalise(candidate.getName()).equals(DropTable.normalise(item)))
+			{
+				return candidate.getExpected();
+			}
+		}
+
+		throw new AssertionError("no such item on the line: " + item);
 	}
 
 	private static void hidingBosses(DropTable dropTable)

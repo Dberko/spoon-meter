@@ -54,6 +54,7 @@ public class DropTable
 		// Simple form: one implicit variant.
 		String counter;
 		String uniqueChanceKey;
+		String rollsPerKcKey;
 		Double totalWeight;
 		List<Item> items;
 
@@ -91,6 +92,7 @@ public class DropTable
 					Variant single = new Variant();
 					single.counter = counter;
 					single.uniqueChanceKey = uniqueChanceKey;
+					single.rollsPerKcKey = rollsPerKcKey;
 					single.totalWeight = totalWeight;
 					single.items = items;
 					effective = Collections.singletonList(single);
@@ -125,6 +127,15 @@ public class DropTable
 	{
 		String counter;
 		String uniqueChanceKey;
+
+		/**
+		 * Config key for how many times this variant is rolled per counted completion, for a
+		 * minigame whose rewards come from rolls the collection log does not count. Guardians of the
+		 * Rift works this way: its rates are per search of the Rewards Guardian, the log counts
+		 * rifts, and how many searches a rift is worth depends on the points earned, so only the
+		 * player can supply it.
+		 */
+		String rollsPerKcKey;
 		Double totalWeight;
 		List<Item> items;
 
@@ -139,6 +150,12 @@ public class DropTable
 		public String getUniqueChanceKey()
 		{
 			return uniqueChanceKey;
+		}
+
+		@Nullable
+		public String getRollsPerKcKey()
+		{
+			return rollsPerKcKey;
 		}
 
 		public List<Item> getItems()

@@ -397,6 +397,20 @@
       ]
     },
     {
+      "name": "Guardians of the Rift",
+      "aliases": ["GOTR"],
+      "approx": true,
+      "rollsPerKcKey": "gotrsearches",
+      "items": [
+        { "name": "Catalytic talisman", "rate": 200 },
+        { "name": "Abyssal lantern", "rate": 700 },
+        { "name": "Abyssal red dye", "rate": 1200 },
+        { "name": "Abyssal green dye", "rate": 1200 },
+        { "name": "Abyssal blue dye", "rate": 1200 },
+        { "name": "Abyssal protector", "rate": 4000 }
+      ]
+    },
+    {
       "name": "The Mad Angel",
       "items": [
         { "name": "Ardeaglais teleport", "rate": 25 },

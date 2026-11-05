@@ -432,6 +432,23 @@ public class SpoonReport
 				uniqueChance = configured;
 			}
 
+			// Most sources roll once per counted kill. A minigame can roll many times for one
+			// counted completion, at a number only the player knows, so the rolls are scaled apart
+			// from the kill count the panel shows.
+			double rolls = kc;
+
+			if (variant.getRollsPerKcKey() != null)
+			{
+				Double perKc = uniqueChances.get(variant.getRollsPerKcKey());
+
+				if (perKc == null || perKc <= 0)
+				{
+					continue;
+				}
+
+				rolls = kc * perKc;
+			}
+
 			totalKc += kc;
 			countersUsed.put(counter == null ? page.getPrimaryCounterLabel() : counter, kc);
 
@@ -447,8 +464,8 @@ public class SpoonReport
 				String key = DropTable.normalise(item.getName());
 				Accumulator accumulator = accumulated.computeIfAbsent(key, k -> new Accumulator(item.getName()));
 
-				accumulator.expected += kc * chance;
-				accumulator.missProbability *= Math.pow(1.0 - chance, kc);
+				accumulator.expected += rolls * chance;
+				accumulator.missProbability *= Math.pow(1.0 - chance, rolls);
 				accumulator.shown = page.quantityOfAny(item.getNames());
 			}
 		}

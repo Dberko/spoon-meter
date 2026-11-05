@@ -177,4 +177,24 @@ public interface SpoonMeterConfig extends Config
 	{
 		return 8.0;
 	}
+
+	@ConfigSection(
+		name = "Minigame reward rolls",
+		description = "Some minigames roll their rewards per reward roll rather than per completion, and the collection log counts the completions, not the rolls",
+		position = 30,
+		closedByDefault = true
+	)
+	String minigameSection = "minigameSection";
+
+	@ConfigItem(
+		keyName = "gotrSearchesPerGame",
+		name = "GOTR searches per rift",
+		description = "How many times you search the Rewards Guardian per rift closed. Guardians of the Rift rates are per search, and a search costs one elemental and one catalytic point, so this follows the points you earn: about 8 at a steady pace, 10 at the energy cap, and more if you spend pearls. Set it to zero to leave the minigame unrated",
+		position = 31,
+		section = minigameSection
+	)
+	default double gotrSearchesPerRift()
+	{
+		return 8.0;
+	}
 }

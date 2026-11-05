@@ -381,6 +381,10 @@ public class SpoonMeterPlugin extends Plugin
 		uniqueChances.put("toaexpert", config.toaExpertUniqueChance() / 100.0);
 		uniqueChances.put("doom", config.doomUniqueChance() / 100.0);
 
+		// Not a chance but a roll count, and it shares the map because both are numbers the player
+		// has to supply for a source whose rate the log cannot pin down on its own.
+		uniqueChances.put("gotrsearches", config.gotrSearchesPerRift());
+
 		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc(),
 			config.hideCombinedPages(), hiddenSources());
 	}
