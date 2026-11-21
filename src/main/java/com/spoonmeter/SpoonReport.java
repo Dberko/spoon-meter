@@ -79,10 +79,13 @@ public class SpoonReport
 		private final double percentile;
 		private final LuckRating rating;
 		private final boolean approximate;
+
+		/** Rolls per counted kill: below one where the roll is shared out, above one where repeated. */
+		private final double rollsPerKc;
 		private final List<ItemLine> items;
 
 		SourceLine(String name, Map<String, Integer> counters, int kc, int obtained, double expected,
-			double percentile, boolean approximate, List<ItemLine> items)
+			double percentile, boolean approximate, double rollsPerKc, List<ItemLine> items)
 		{
 			this.name = name;
 			this.counters = counters;
@@ -92,6 +95,7 @@ public class SpoonReport
 			this.percentile = percentile;
 			this.rating = LuckRating.fromPercentile(percentile);
 			this.approximate = approximate;
+			this.rollsPerKc = rollsPerKc;
 			this.items = items;
 		}
 
@@ -130,6 +134,17 @@ public class SpoonReport
 		public LuckRating getRating()
 		{
 			return rating;
+		}
+
+		public double getRollsPerKc()
+		{
+			return rollsPerKc;
+		}
+
+		/** Whether the kill count alone does not say how many rolls the account actually got. */
+		public boolean isScaled()
+		{
+			return Math.abs(rollsPerKc - 1.0) > 1.0e-9;
 		}
 
 		public boolean isApproximate()
@@ -192,15 +207,17 @@ public class SpoonReport
 		private final Map<String, Integer> counters;
 		private final int kc;
 		private final boolean approximate;
+		private final double rollsPerKc;
 		private final Map<String, Accumulator> items;
 
 		private Scored(String name, Map<String, Integer> counters, int kc, boolean approximate,
-			Map<String, Accumulator> items)
+			double rollsPerKc, Map<String, Accumulator> items)
 		{
 			this.name = name;
 			this.counters = counters;
 			this.kc = kc;
 			this.approximate = approximate;
+			this.rollsPerKc = rollsPerKc;
 			this.items = items;
 		}
 	}
@@ -357,7 +374,8 @@ public class SpoonReport
 			totalExpected += pageExpected;
 
 			lines.add(new SourceLine(page.name, page.counters, page.kc, pageObtained, pageExpected,
-				RarityLuck.percentile(expectedPerItem, collectedPerItem), page.approximate, items));
+				RarityLuck.percentile(expectedPerItem, collectedPerItem), page.approximate,
+				page.rollsPerKc, items));
 		}
 
 		return new SpoonReport(lines, totalObtained, totalExpected, accountPercentile(lines),
@@ -407,6 +425,7 @@ public class SpoonReport
 		Map<String, Accumulator> accumulated = new LinkedHashMap<>();
 		Map<String, Integer> countersUsed = new LinkedHashMap<>();
 		int totalKc = 0;
+		double totalRolls = 0;
 
 		for (DropTable.Variant variant : source.getVariants())
 		{
@@ -450,6 +469,7 @@ public class SpoonReport
 			}
 
 			totalKc += kc;
+			totalRolls += rolls;
 			countersUsed.put(counter == null ? page.getPrimaryCounterLabel() : counter, kc);
 
 			for (DropTable.Item item : variant.getItems())
@@ -475,7 +495,10 @@ public class SpoonReport
 			return null;
 		}
 
-		return new Scored(page.getName(), countersUsed, totalKc, source.isApprox(), accumulated);
+		// Kept as a ratio rather than the configured figure, so a source split across variants that
+		// scale differently still reports what its kill count was actually worth.
+		return new Scored(page.getName(), countersUsed, totalKc, source.isApprox(),
+			totalKc > 0 ? totalRolls / totalKc : 1.0, accumulated);
 	}
 
 	/**

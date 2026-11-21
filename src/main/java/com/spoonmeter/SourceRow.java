@@ -67,9 +67,19 @@ class SourceRow extends JPanel
 
 		// Just "1,498 kc" - the real counter names ("Corrupted Gauntlet completion count") are far
 		// too long for the sidebar, so they live on the tooltip instead.
-		JLabel kc = new JLabel(SpoonSummary.WHOLE.format(line.getKc()) + " kc");
+		JLabel kc = new JLabel(SpoonSummary.WHOLE.format(line.getKc()) + " kc" + scaling(line));
 		kc.setFont(FontManager.getRunescapeSmallFont());
 		kc.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
+
+		if (line.isScaled())
+		{
+			// Without this the figures look broken rather than misconfigured: a soloer left on the
+			// default mass share sees twenty times the drops they should, with nothing on the row to
+			// say the expectation rests on a setting at all.
+			kc.setToolTipText("<html>These kills were counted as "
+				+ SpoonSummary.ONE_DP.format(line.getRollsPerKc()) + " rolls each.<br>"
+				+ "Change it in the plugin's settings if that is not how you fight it.</html>");
+		}
 
 		JLabel ratio = new JLabel(line.getObtained() + " / " + SpoonSummary.ONE_DP.format(line.getExpected())
 			+ "  (" + SpoonSummary.ONE_DP.format(line.getRatio()) + "x)");
@@ -131,6 +141,27 @@ class SourceRow extends JPanel
 				setBackground(ColorScheme.DARKER_GRAY_COLOR);
 			}
 		});
+	}
+
+	/**
+	 * How much a kill was worth, where that is not one roll. A damage share reads as a percentage
+	 * because that is how it is set; anything rolled repeatedly reads as a multiplier.
+	 */
+	private static String scaling(SpoonReport.SourceLine line)
+	{
+		if (!line.isScaled())
+		{
+			return "";
+		}
+
+		double rolls = line.getRollsPerKc();
+
+		if (rolls < 1)
+		{
+			return "  · " + SpoonSummary.WHOLE.format(Math.round(rolls * 100)) + "% share";
+		}
+
+		return "  · x" + SpoonSummary.ONE_DP.format(rolls);
 	}
 
 	private static String buildTooltip(SpoonReport.SourceLine line)

@@ -498,6 +498,17 @@ public class SelfCheck
 			itemExpected(only(hueyPage, dropTable, fullMass), "Dragon hunter wand"), 0.001);
 		check("while the panel still shows the kills", massLine.getKc() == 500);
 
+		// The share has to reach the panel, or a soloer left on the mass default sees twenty times
+		// the drops they should with nothing on the row explaining why.
+		near("the row knows a solo was one roll a kill", 1.0, soloLine.getRollsPerKc(), 1.0e-9);
+		check("and says nothing about scaling", !soloLine.isScaled());
+		near("a fifth of the damage is a fifth of a roll", 0.2, massLine.getRollsPerKc(), 1.0e-9);
+		check("which the row does flag", massLine.isScaled());
+
+		// A source nobody splits must not grow a share label.
+		check("an ordinary boss is never flagged as scaled",
+			!only(zulrah(1024, 7), dropTable, solo).isScaled());
+
 		// Nobody should be scored against a share they have not set.
 		Map<String, Double> none = new HashMap<>();
 		none.put("hueycontribution", 0.0);
