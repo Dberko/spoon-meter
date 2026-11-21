@@ -179,8 +179,8 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigSection(
-		name = "Minigame reward rolls",
-		description = "Some minigames roll their rewards per reward roll rather than per completion, and the collection log counts the completions, not the rolls",
+		name = "Reward rolls and contribution",
+		description = "A few sources are not rolled once per completion. Some roll many times, some roll a fraction of a time because the roll is shared out by damage, and the collection log records neither",
 		position = 30,
 		closedByDefault = true
 	)
@@ -196,5 +196,18 @@ public interface SpoonMeterConfig extends Config
 	default double gotrSearchesPerRift()
 	{
 		return 8.0;
+	}
+
+	@ConfigItem(
+		keyName = "hueycoatlContribution",
+		name = "Hueycoatl damage share",
+		description = "Your average share of the damage to the Hueycoatl. Its 1/18 unique chance is per player and scaled by contribution, so a mass splits it: 100 is a solo, and a crowded world is nearer 10 to 20. The collection log cannot tell which you did. Set it to zero to leave the boss unrated",
+		position = 32,
+		section = minigameSection
+	)
+	@Units(Units.PERCENT)
+	default double hueycoatlContribution()
+	{
+		return 100.0;
 	}
 }

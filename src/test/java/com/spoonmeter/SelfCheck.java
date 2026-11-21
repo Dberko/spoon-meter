@@ -490,6 +490,40 @@ public class SelfCheck
 			SpoonReport.build(Collections.singletonList(page), dropTable, new HashMap<>(), 10)
 				.isEmpty());
 
+		// The Hueycoatl splits one roll by damage instead of rolling many times, so the same
+		// mechanism runs the other way: a mass world is a fraction of a solo roll.
+		DropTable.Source huey = dropTable.find("The Hueycoatl");
+		check("the Hueycoatl is scaled by contribution",
+			"hueycontribution".equals(huey.getVariants().get(0).getRollsPerKcKey()));
+
+		// Its printed uniques must still add up to the 1/18 unique table they are drawn from. The
+		// hide is the missing third of it, left out because it always drops three at a time.
+		double table = 1 / rateOf(huey, "Dragon hunter wand") + 1 / rateOf(huey, "Tome of earth")
+			+ 11.0 / 315;
+		near("its uniques and the hide sum to the 1/18 table", 18.0, 1 / table, 0.001);
+		check("the hide itself stays out, dropping three at a time",
+			!names(huey).contains(DropTable.normalise("Hueycoatl hide")));
+
+		CollectionLogPage hueyPage = new CollectionLogPage("The Hueycoatl");
+		hueyPage.getCounters().put("Hueycoatl kills", 500);
+		hueyPage.getItems().put("Dragon hunter wand", 1);
+
+		Map<String, Double> solo = new HashMap<>();
+		solo.put("hueycontribution", 1.0);
+		Map<String, Double> mass = new HashMap<>();
+		mass.put("hueycontribution", 0.2);
+
+		SpoonReport.SourceLine soloLine = only(hueyPage, dropTable, solo);
+		SpoonReport.SourceLine massLine = only(hueyPage, dropTable, mass);
+
+		near("a solo expects 500/105 wands", 500 / 105.0,
+			itemExpected(soloLine, "Dragon hunter wand"), 0.001);
+		near("a fifth of the damage expects a fifth of that", 100 / 105.0,
+			itemExpected(massLine, "Dragon hunter wand"), 0.001);
+		check("so the same log reads luckier in a mass",
+			massLine.getPercentile() > soloLine.getPercentile());
+		check("while the panel still shows the kills", massLine.getKc() == 500);
+
 		// Bought with pearls rather than dropped, so they are not luck and must stay out.
 		for (String bought : new String[]{"Hat of the Eye", "Robe top of the Eye", "Boots of the Eye",
 			"Guardian's eye", "Ring of the elements"})

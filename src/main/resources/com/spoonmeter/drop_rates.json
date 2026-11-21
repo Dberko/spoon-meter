@@ -455,6 +455,8 @@
     },
     {
       "name": "The Hueycoatl",
+      "approx": true,
+      "rollsPerKcKey": "hueycontribution",
       "items": [
         { "name": "Tome of earth", "rate": 90 },
         { "name": "Dragon hunter wand", "rate": 105 },

@@ -385,6 +385,10 @@ public class SpoonMeterPlugin extends Plugin
 		// has to supply for a source whose rate the log cannot pin down on its own.
 		uniqueChances.put("gotrsearches", config.gotrSearchesPerRift());
 
+		// A share of one roll rather than many: the Hueycoatl's unique chance is per player and
+		// divided by damage, so a mass world is a fraction of a solo roll.
+		uniqueChances.put("hueycontribution", config.hueycoatlContribution() / 100.0);
+
 		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc(),
 			config.hideCombinedPages(), hiddenSources());
 	}
