@@ -182,7 +182,7 @@ public class SpoonMeterPanel extends PluginPanel
 
 		for (SpoonReport.SourceLine source : sources)
 		{
-			sourceList.add(new SourceRow(source, plugin::hideSource));
+			sourceList.add(new SourceRow(source, plugin::hideSource, plugin::toggleItem));
 		}
 
 		int hidden = plugin.hiddenCount();

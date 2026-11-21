@@ -347,22 +347,55 @@ public class SelfCheck
 		// supplies hundreds of those, so a page showing twenty-six of them says nothing about the
 		// boss. It is left out for the same reason a bulk stack is.
 		DropTable.Source thermy = dropTable.find("Thermonuclear smoke devil");
-		check("the occult is not scored against the boss",
-			!names(thermy).contains(DropTable.normalise("Occult necklace")));
 
-		// What is left is the three the boss alone drops, plus a chainbody it shares only with the
-		// Kalphite Queen, which is a counted source and so pools properly.
+		CollectionLogPage devil = new CollectionLogPage("Thermonuclear smoke devil");
+		devil.getCounters().put("Thermonuclear Smoke Devil kills", 1608);
+		devil.getItems().put("Occult necklace", 26);
+		devil.getItems().put("Smoke battlestaff", 3);
+
+		Map<String, Double> none = new HashMap<>();
+		SpoonReport.SourceLine def = only(devil, dropTable, none);
+
+		// The reporter's shape: one occult off the boss and twenty-five off slayer tasks. Counting
+		// the page's number would call five times dry five times spooned.
+		check("the occult is listed", itemNamed(def, "Occult necklace") != null);
+		check("but not counted", !itemNamed(def, "Occult necklace").isCounted());
+		check("and is marked as something the log cannot count",
+			itemNamed(def, "Occult necklace").isUncountable());
+		check("so the twenty-six do not reach the total", def.getObtained() == 3);
+
+		// The boss keeps enough to rate: three it alone drops, and a chainbody shared only with the
+		// Kalphite Queen, which is counted and so pools properly.
 		for (String only : new String[]{"Smoke battlestaff", "Jar of smoke", "Pet smoke devil"})
 		{
-			check(only + " still is", names(thermy).contains(DropTable.normalise(only)));
+			check(only + " is still counted", itemNamed(def, only).isCounted());
 		}
 
-		check("and the chainbody, which the queen also drops",
-			names(thermy).contains(DropTable.normalise("Dragon chainbody"))
+		check("as is the chainbody, which the queen also drops",
+			itemNamed(def, "Dragon chainbody").isCounted()
 				&& names(dropTable.find("Kalphite Queen"))
 					.contains(DropTable.normalise("Dragon chainbody")));
 
-		check("so the boss is still worth rating", thermy.getItems().size() >= 4);
+		// A player who knows their own came off the boss can say so from the right-click menu.
+		Set<String> flipped = new HashSet<>(
+			Collections.singletonList(DropTable.normalise("Occult necklace")));
+		SpoonReport.SourceLine turnedOn = SpoonReport.build(Collections.singletonList(devil),
+			dropTable, none, 10, false, Collections.emptySet(), flipped).getSources().get(0);
+
+		check("turning it on counts it", itemNamed(turnedOn, "Occult necklace").isCounted());
+		check("and the twenty-six then do reach the total", turnedOn.getObtained() == 29);
+		check("which reads as spooned, as they asked for",
+			turnedOn.getRatio() > def.getRatio());
+
+		// The same switch silences an ordinary item for anyone who wants it gone.
+		Set<String> silenced = new HashSet<>(
+			Collections.singletonList(DropTable.normalise("Smoke battlestaff")));
+		SpoonReport.SourceLine quieted = SpoonReport.build(Collections.singletonList(devil),
+			dropTable, none, 10, false, Collections.emptySet(), silenced).getSources().get(0);
+
+		check("an ordinary item can be turned off too",
+			!itemNamed(quieted, "Smoke battlestaff").isCounted());
+		check("and then it moves nothing", quieted.getObtained() == 0);
 	}
 
 	/**
@@ -683,6 +716,19 @@ public class SelfCheck
 			SpoonReport.build(Collections.singletonList(hueyPage), dropTable, new HashMap<>(), 10)
 				.isEmpty());
 
+	}
+
+	private static SpoonReport.ItemLine itemNamed(SpoonReport.SourceLine line, String item)
+	{
+		for (SpoonReport.ItemLine candidate : line.getItems())
+		{
+			if (DropTable.normalise(candidate.getName()).equals(DropTable.normalise(item)))
+			{
+				return candidate;
+			}
+		}
+
+		return null;
 	}
 
 	private static Set<String> names(DropTable.Source source)

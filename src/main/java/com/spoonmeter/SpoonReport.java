@@ -26,13 +26,32 @@ public class SpoonReport
 		private final double expected;
 		private final double dryness;
 
-		ItemLine(String name, double chance, int obtained, double expected, double dryness)
+		/** Whether this item is being scored, or only listed. */
+		private final boolean counted;
+
+		/** Whether it is the kind of item the collection log cannot count honestly. */
+		private final boolean uncountable;
+
+		ItemLine(String name, double chance, int obtained, double expected, double dryness,
+			boolean counted, boolean uncountable)
 		{
 			this.name = name;
 			this.chance = chance;
 			this.obtained = obtained;
 			this.expected = expected;
 			this.dryness = dryness;
+			this.counted = counted;
+			this.uncountable = uncountable;
+		}
+
+		public boolean isCounted()
+		{
+			return counted;
+		}
+
+		public boolean isUncountable()
+		{
+			return uncountable;
 		}
 
 		public String getName()
@@ -202,6 +221,8 @@ public class SpoonReport
 	private static final class Accumulator
 	{
 		private final String name;
+		private boolean counted = true;
+		private boolean uncountable;
 		private double expected;
 		private double missProbability = 1.0;
 
@@ -338,13 +359,15 @@ public class SpoonReport
 	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
 		Map<String, Double> uniqueChances, int minKc)
 	{
-		return build(pages, dropTable, uniqueChances, minKc, false, Collections.emptySet());
+		return build(pages, dropTable, uniqueChances, minKc, false, Collections.emptySet(),
+			Collections.emptySet());
 	}
 
 	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
 		Map<String, Double> uniqueChances, int minKc, boolean hideCombined)
 	{
-		return build(pages, dropTable, uniqueChances, minKc, hideCombined, Collections.emptySet());
+		return build(pages, dropTable, uniqueChances, minKc, hideCombined, Collections.emptySet(),
+			Collections.emptySet());
 	}
 
 	/**
@@ -354,11 +377,24 @@ public class SpoonReport
 	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
 		Map<String, Double> uniqueChances, int minKc, boolean hideCombined, Set<String> hidden)
 	{
+		return build(pages, dropTable, uniqueChances, minKc, hideCombined, hidden,
+			Collections.emptySet());
+	}
+
+	/**
+	 * @param flippedItems items whose counting has been turned around from its default, so that one
+	 *                     the log cannot count honestly is scored anyway, or an ordinary one is not
+	 */
+	public static SpoonReport build(Collection<CollectionLogPage> pages, DropTable dropTable,
+		Map<String, Double> uniqueChances, int minKc, boolean hideCombined, Set<String> hidden,
+		Set<String> flippedItems)
+	{
 		List<Scored> scored = new ArrayList<>();
 
 		for (CollectionLogPage page : pages)
 		{
-			Scored candidate = expectations(page, dropTable, uniqueChances, minKc, hideCombined, hidden);
+			Scored candidate = expectations(page, dropTable, uniqueChances, minKc, hideCombined,
+				hidden, flippedItems);
 
 			if (candidate != null)
 			{
@@ -388,15 +424,21 @@ public class SpoonReport
 
 			for (Accumulator accumulator : page.items.values())
 			{
-				pageObtained += accumulator.allocated;
-				pageExpected += accumulator.expected;
+				// An item that is only listed still shows its figures, so the player can see what
+				// it would have been worth and decide, but it moves nothing.
+				if (accumulator.counted)
+				{
+					pageObtained += accumulator.allocated;
+					pageExpected += accumulator.expected;
 
-				expectedPerItem[index] = accumulator.expected;
-				collectedPerItem[index] = accumulator.allocated;
-				index++;
+					expectedPerItem[index] = accumulator.expected;
+					collectedPerItem[index] = accumulator.allocated;
+					index++;
+				}
 
 				items.add(new ItemLine(accumulator.name, accumulator.expected / page.kc,
-					accumulator.allocated, accumulator.expected, 1.0 - accumulator.missProbability));
+					accumulator.allocated, accumulator.expected, 1.0 - accumulator.missProbability,
+					accumulator.counted, accumulator.uncountable));
 			}
 
 			if (pageExpected <= 0)
@@ -406,6 +448,12 @@ public class SpoonReport
 
 			totalObtained += pageObtained;
 			totalExpected += pageExpected;
+
+			if (index < expectedPerItem.length)
+			{
+				expectedPerItem = java.util.Arrays.copyOf(expectedPerItem, index);
+				collectedPerItem = java.util.Arrays.copyOf(collectedPerItem, index);
+			}
 
 			double weighted = RarityLuck.weighted(expectedPerItem, collectedPerItem);
 			double weightedExpected = RarityLuck.weightedExpectation(expectedPerItem);
@@ -451,7 +499,8 @@ public class SpoonReport
 	/** First pass: what this page's kill counts should have produced, and what the log shows. */
 	@Nullable
 	private static Scored expectations(CollectionLogPage page, DropTable dropTable,
-		Map<String, Double> uniqueChances, int minKc, boolean hideCombined, Set<String> hidden)
+		Map<String, Double> uniqueChances, int minKc, boolean hideCombined, Set<String> hidden,
+		Set<String> flippedItems)
 	{
 		DropTable.Source source = dropTable.find(page.getName());
 
@@ -547,6 +596,12 @@ public class SpoonReport
 
 				String key = DropTable.normalise(item.getName());
 				Accumulator accumulator = accumulated.computeIfAbsent(key, k -> new Accumulator(item.getName()));
+
+				// An item the log cannot count honestly is listed but not scored, unless the player
+				// says their own copies did come from here. An ordinary one is scored unless they
+				// say otherwise.
+				accumulator.uncountable = item.isUncounted();
+				accumulator.counted = item.isUncounted() == flippedItems.contains(key);
 
 				accumulator.expected += itemRolls * chance;
 				accumulator.missProbability *= Math.pow(1.0 - chance, itemRolls);

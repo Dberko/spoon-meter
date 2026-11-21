@@ -77,6 +77,18 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "flippedItems",
+		name = "",
+		description = "Items whose counting has been turned around from the right-click menu",
+		hidden = true,
+		position = 7
+	)
+	default String flippedItems()
+	{
+		return "";
+	}
+
+	@ConfigItem(
 		keyName = "hiddenSources",
 		name = "Hidden bosses",
 		description = "Bosses left out of the list and the account total, separated by commas. Right-click a boss in the panel to add one, or edit the list here",

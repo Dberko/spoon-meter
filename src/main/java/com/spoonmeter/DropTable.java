@@ -182,6 +182,15 @@ public class DropTable
 		Double chance;
 
 		/**
+		 * Whether this item also comes from somewhere the collection log never counts. The log
+		 * records a quantity for the whole account but counts only boss kills, so an occult
+		 * necklace, which drops off ordinary smoke devils a slayer task supplies hundreds of,
+		 * arrives with a number that says nothing about the boss. Such items are listed but not
+		 * scored unless the player says otherwise, because the count is not evidence.
+		 */
+		boolean uncounted;
+
+		/**
 		 * Config key for how many times this one item is rolled per kill, where the rest of the
 		 * source is not. An awakened Desert Treasure boss rolls its unique table three times as
 		 * often, but the orb and the pet are rolled outside that table and are not stated to change,
@@ -193,6 +202,11 @@ public class DropTable
 		public String getRollsPerKcKey()
 		{
 			return rollsPerKcKey;
+		}
+
+		public boolean isUncounted()
+		{
+			return uncounted;
 		}
 
 		/** What the panel shows. */

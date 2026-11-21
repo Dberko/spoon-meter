@@ -323,6 +323,37 @@ public class SpoonMeterPlugin extends Plugin
 		}
 	}
 
+	/** Items the user has turned on or off from an item's right-click menu. */
+	private Set<String> flippedItems()
+	{
+		Set<String> flipped = new HashSet<>();
+
+		for (String name : Text.fromCSV(config.flippedItems()))
+		{
+			flipped.add(DropTable.normalise(name));
+		}
+
+		return flipped;
+	}
+
+	/**
+	 * Called by the panel when an item's counting is turned around. An occult necklace also drops
+	 * off ordinary smoke devils, so it is not scored by default; a player who knows their own came
+	 * off the boss can say so, and anyone can silence an ordinary item the same way.
+	 */
+	void toggleItem(String name)
+	{
+		List<String> names = new ArrayList<>(Text.fromCSV(config.flippedItems()));
+		String wanted = DropTable.normalise(name);
+
+		if (!names.removeIf(existing -> DropTable.normalise(existing).equals(wanted)))
+		{
+			names.add(name);
+		}
+
+		configManager.setConfiguration(SpoonMeterConfig.GROUP, "flippedItems", Text.toCSV(names));
+	}
+
 	/** Called by the panel's footer when the user wants them all back. */
 	void clearHiddenSources()
 	{
@@ -394,7 +425,7 @@ public class SpoonMeterPlugin extends Plugin
 		uniqueChances.put("dt2awakened", 1.0 + 2.0 * (config.dt2AwakenedShare() / 100.0));
 
 		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc(),
-			config.hideCombinedPages(), hiddenSources());
+			config.hideCombinedPages(), hiddenSources(), flippedItems());
 	}
 
 	private void refreshPanel()

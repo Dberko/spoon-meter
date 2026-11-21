@@ -1574,6 +1574,11 @@
       "approx": true,
       "items": [
         {
+          "name": "Occult necklace",
+          "rate": 350,
+          "uncounted": true
+        },
+        {
           "name": "Smoke battlestaff",
           "rate": 512
         },

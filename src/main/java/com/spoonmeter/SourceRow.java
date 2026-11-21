@@ -36,8 +36,13 @@ class SourceRow extends JPanel
 	private final JPanel details;
 	private boolean expanded;
 
-	SourceRow(SpoonReport.SourceLine line, Consumer<String> onHide)
+	/** Held, because the item rows are built after the constructor has returned. */
+	private final Consumer<String> onToggleItem;
+
+	SourceRow(SpoonReport.SourceLine line, Consumer<String> onHide, Consumer<String> onToggleItem)
 	{
+		this.onToggleItem = onToggleItem;
+
 		setLayout(new BorderLayout());
 		setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		setBorder(new EmptyBorder(6, 8, 6, 8));
@@ -217,7 +222,14 @@ class SourceRow extends JPanel
 			String right;
 			Color colour;
 
-			if (item.getObtained() > 0)
+			if (!item.isCounted())
+			{
+				// Shown but not scored, so the player can see what it holds and decide.
+				name.setForeground(ColorScheme.MEDIUM_GRAY_COLOR);
+				right = "not counted";
+				colour = ColorScheme.MEDIUM_GRAY_COLOR;
+			}
+			else if (item.getObtained() > 0)
 			{
 				name.setForeground(Color.WHITE);
 				right = item.getObtained() + " / " + SpoonSummary.ONE_DP.format(item.getExpected());
@@ -236,10 +248,34 @@ class SourceRow extends JPanel
 			value.setFont(FontManager.getRunescapeSmallFont());
 			value.setForeground(colour);
 
-			row.setToolTipText("<html>" + item.getName()
-				+ "<br>1 in " + SpoonSummary.WHOLE.format(Math.round(1.0 / item.getChance())) + " per attempt"
-				+ "<br>" + SpoonSummary.ONE_DP.format(item.getExpected()) + " expected, "
-				+ item.getObtained() + " obtained</html>");
+			StringBuilder tip = new StringBuilder("<html>").append(item.getName())
+				.append("<br>1 in ")
+				.append(SpoonSummary.WHOLE.format(Math.round(1.0 / item.getChance())))
+				.append(" per attempt<br>")
+				.append(SpoonSummary.ONE_DP.format(item.getExpected())).append(" expected, ")
+				.append(item.getObtained()).append(" obtained");
+
+			if (item.isUncountable())
+			{
+				tip.append("<br><br>This also drops somewhere the collection log never counts, so")
+					.append("<br>the number here is not evidence about this source. Right-click")
+					.append("<br>to count it anyway.");
+			}
+			else if (!item.isCounted())
+			{
+				tip.append("<br><br>You have turned this one off. Right-click to count it again.");
+			}
+
+			row.setToolTipText(tip.append("</html>").toString());
+
+			JPopupMenu itemMenu = new JPopupMenu();
+			JMenuItem toggle = new JMenuItem(
+				item.isCounted() ? "Don't count " + item.getName() : "Count " + item.getName());
+			toggle.addActionListener(e -> onToggleItem.accept(item.getName()));
+			itemMenu.add(toggle);
+			row.setComponentPopupMenu(itemMenu);
+			name.setInheritsPopupMenu(true);
+			value.setInheritsPopupMenu(true);
 
 			row.add(name, BorderLayout.CENTER);
 			row.add(value, BorderLayout.EAST);
