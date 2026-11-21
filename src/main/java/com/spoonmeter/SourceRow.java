@@ -86,6 +86,16 @@ class SourceRow extends JPanel
 		ratio.setFont(FontManager.getRunescapeSmallFont());
 		ratio.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 
+		// The counts are there to be checked against the log, but the figure beside them weighs each
+		// drop by how rare it is, so the two do not divide into one another where what you found was
+		// unusually good or unusually cheap. That is the whole point of it, and it needs saying.
+		ratio.setToolTipText("<html>" + line.getObtained() + " found against "
+			+ SpoonSummary.ONE_DP.format(line.getExpected()) + " expected, which is "
+			+ SpoonSummary.ONE_DP.format(line.getCountRatio()) + "x by count.<br>"
+			+ "The " + SpoonSummary.ONE_DP.format(line.getRatio())
+			+ "x weighs each drop by how rare it is, so a mega rare counts for more than a<br>"
+			+ "common one. Two cheap drops and two expensive ones are not the same luck.</html>");
+
 		statsRow.add(kc, BorderLayout.WEST);
 		statsRow.add(ratio, BorderLayout.EAST);
 

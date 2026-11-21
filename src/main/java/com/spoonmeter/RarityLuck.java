@@ -54,19 +54,54 @@ final class RarityLuck
 		return CACHE.computeIfAbsent(key(expected, collected), k -> simulate(expected, collected));
 	}
 
+	/**
+	 * What one of an item is worth, against one of something expected as often. The score and the
+	 * ratio both read from here, so the two cannot drift into disagreeing about what a drop is worth.
+	 */
+	static double weight(double expected)
+	{
+		return expected > 0 ? 1.0 / Math.sqrt(expected) : 0;
+	}
+
+	/** What the account holds, in the same units. */
+	static double weighted(double[] expected, int[] collected)
+	{
+		double total = 0;
+
+		for (int i = 0; i < expected.length; i++)
+		{
+			total += collected[i] * weight(expected[i]);
+		}
+
+		return total;
+	}
+
+	/** What those kill counts should have produced, in the same units. */
+	static double weightedExpectation(double[] expected)
+	{
+		double total = 0;
+
+		for (double lambda : expected)
+		{
+			total += lambda * weight(lambda);
+		}
+
+		return total;
+	}
+
 	private static double simulate(double[] expected, int[] collected)
 	{
 		// A rarer item is worth more. The kill count is a shared factor between one over the chance
 		// and one over the expectation, and a shared factor cancels out of a percentile.
-		double[] weight = new double[expected.length];
+		double[] weights = new double[expected.length];
 		double target = 0;
 
 		for (int i = 0; i < expected.length; i++)
 		{
 			if (expected[i] > 0)
 			{
-				weight[i] = 1.0 / Math.sqrt(expected[i]);
-				target += collected[i] * weight[i];
+				weights[i] = weight(expected[i]);
+				target += collected[i] * weights[i];
 			}
 		}
 
@@ -83,7 +118,7 @@ final class RarityLuck
 			{
 				if (expected[i] > 0)
 				{
-					total += poisson(random, expected[i]) * weight[i];
+					total += poisson(random, expected[i]) * weights[i];
 				}
 			}
 

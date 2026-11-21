@@ -406,6 +406,19 @@ public class SelfCheck
 			LuckRating.spoonScore(shadows.getPercentile())
 				- LuckRating.spoonScore(lesser.getPercentile()) > 15);
 
+		// The ratio is the number people read first, and counting alone made it identical for both
+		// of these, which is what made the scoring look like guesswork from outside.
+		near("the same count either way", lesser.getObtained(), shadows.getObtained(), 0);
+		near("and so the same ratio by count", lesser.getCountRatio(), shadows.getCountRatio(), 1.0e-9);
+		check("but not the same ratio by rarity", shadows.getRatio() > lesser.getRatio() + 0.3);
+		check("the rarest is worth more than twice the commonest",
+			shadows.getRatio() > 2 * lesser.getRatio());
+
+		// It has to agree with the score, or the row argues with itself.
+		check("ratio and score point the same way",
+			(shadows.getRatio() > lesser.getRatio())
+				== (shadows.getPercentile() > lesser.getPercentile()));
+
 		// One mega rare against one common one, at the same kill count.
 		SpoonReport.SourceLine oneShadow = only(toa(60, "Tumeken's shadow", 1), dropTable, chances);
 		SpoonReport.SourceLine oneFang = only(toa(60, "Osmumten's fang", 1), dropTable, chances);

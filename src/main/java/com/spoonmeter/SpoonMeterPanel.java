@@ -170,6 +170,11 @@ public class SpoonMeterPanel extends PluginPanel
 		statsLabel.setText(SpoonSummary.WHOLE.format(report.getObtained()) + " uniques vs "
 			+ SpoonSummary.ONE_DP.format(report.getExpected()) + " expected  ("
 			+ SpoonSummary.ONE_DP.format(report.getRatio()) + "x)");
+		statsLabel.setToolTipText("<html>" + SpoonSummary.WHOLE.format(report.getObtained())
+			+ " found against " + SpoonSummary.ONE_DP.format(report.getExpected())
+			+ " expected, which is " + SpoonSummary.ONE_DP.format(report.getCountRatio())
+			+ "x by count.<br>The " + SpoonSummary.ONE_DP.format(report.getRatio())
+			+ "x weighs each drop by how rare it is.</html>");
 		overallBar.setPercentile(report.getPercentile());
 
 		List<SpoonReport.SourceLine> sources = new ArrayList<>(report.getSources());

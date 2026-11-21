@@ -82,10 +82,15 @@ public class SpoonReport
 
 		/** Rolls per counted kill: below one where the roll is shared out, above one where repeated. */
 		private final double rollsPerKc;
+
+		/** The same totals as {@link #obtained} and {@link #expected}, weighted by how rare each is. */
+		private final double weighted;
+		private final double weightedExpected;
 		private final List<ItemLine> items;
 
 		SourceLine(String name, Map<String, Integer> counters, int kc, int obtained, double expected,
-			double percentile, boolean approximate, double rollsPerKc, List<ItemLine> items)
+			double percentile, boolean approximate, double rollsPerKc, double weighted,
+			double weightedExpected, List<ItemLine> items)
 		{
 			this.name = name;
 			this.counters = counters;
@@ -96,6 +101,8 @@ public class SpoonReport
 			this.rating = LuckRating.fromPercentile(percentile);
 			this.approximate = approximate;
 			this.rollsPerKc = rollsPerKc;
+			this.weighted = weighted;
+			this.weightedExpected = weightedExpected;
 			this.items = items;
 		}
 
@@ -157,10 +164,20 @@ public class SpoonReport
 			return items;
 		}
 
-		/** Uniques per expected unique. 2.0 is double rate, 0.5 is half. */
-		public double getRatio()
+		/** Uniques per expected unique, counting every drop the same. 2.0 is double rate. */
+		public double getCountRatio()
 		{
 			return expected <= 0 ? 1.0 : obtained / expected;
+		}
+
+		/**
+		 * The same thing with each drop worth what its rarity makes it worth, which is what the
+		 * panel shows. A plain count cannot separate two mega rares from two common ones and reads
+		 * identically for both, which is the complaint this answers.
+		 */
+		public double getRatio()
+		{
+			return weightedExpected <= 0 ? 1.0 : weighted / weightedExpected;
 		}
 
 		/** The item you are furthest behind on, or null if nothing notable is missing. */
@@ -229,13 +246,20 @@ public class SpoonReport
 	private final LuckRating rating;
 	private final int pagesSeen;
 
-	private SpoonReport(List<SourceLine> sources, int obtained, double expected, double percentile, int pagesSeen)
+	/** The account's totals with each drop worth what its rarity makes it worth. */
+	private final double weighted;
+	private final double weightedExpected;
+
+	private SpoonReport(List<SourceLine> sources, int obtained, double expected, double percentile,
+		double weighted, double weightedExpected, int pagesSeen)
 	{
 		this.sources = sources;
 		this.obtained = obtained;
 		this.expected = expected;
 		this.percentile = percentile;
 		this.rating = LuckRating.fromPercentile(percentile);
+		this.weighted = weighted;
+		this.weightedExpected = weightedExpected;
 		this.pagesSeen = pagesSeen;
 	}
 
@@ -280,9 +304,16 @@ public class SpoonReport
 		return sources.isEmpty();
 	}
 
-	public double getRatio()
+	/** Uniques per expected unique, counting every drop the same. */
+	public double getCountRatio()
 	{
 		return expected <= 0 ? 1.0 : obtained / expected;
+	}
+
+	/** The same, weighted by rarity, so it agrees with the score and with each source's own ratio. */
+	public double getRatio()
+	{
+		return weightedExpected <= 0 ? 1.0 : weighted / weightedExpected;
 	}
 
 	/**
@@ -339,6 +370,8 @@ public class SpoonReport
 		List<SourceLine> lines = new ArrayList<>();
 		int totalObtained = 0;
 		double totalExpected = 0;
+		double totalWeighted = 0;
+		double totalWeightedExpected = 0;
 
 		for (Scored page : scored)
 		{
@@ -373,13 +406,19 @@ public class SpoonReport
 			totalObtained += pageObtained;
 			totalExpected += pageExpected;
 
+			double weighted = RarityLuck.weighted(expectedPerItem, collectedPerItem);
+			double weightedExpected = RarityLuck.weightedExpectation(expectedPerItem);
+
+			totalWeighted += weighted;
+			totalWeightedExpected += weightedExpected;
+
 			lines.add(new SourceLine(page.name, page.counters, page.kc, pageObtained, pageExpected,
 				RarityLuck.percentile(expectedPerItem, collectedPerItem), page.approximate,
-				page.rollsPerKc, items));
+				page.rollsPerKc, weighted, weightedExpected, items));
 		}
 
 		return new SpoonReport(lines, totalObtained, totalExpected, accountPercentile(lines),
-			pages.size());
+			totalWeighted, totalWeightedExpected, pages.size());
 	}
 
 	/**
