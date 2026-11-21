@@ -314,6 +314,32 @@ public class SelfCheck
 			+ 1 / rateOf(hydra, "Hydra leather") + 1 / rateOf(hydra, "Hydra's claw");
 
 		check("the hydra's uniques stay under its 1/87.6 table", 1 / hydraTable > 87.0);
+
+		// A boss's commonest unique is the one that moves its expectation most, so getting it wrong
+		// by a factor skews everybody who fights it. Zilyana's sword had been copied from the rates
+		// of the pieces that are four times rarer.
+		DropTable.Source zilyana = dropTable.find("Commander Zilyana");
+		near("Zilyana's sword is the common one at 1/127", 127.0,
+			rateOf(zilyana, "Saradomin sword"), 0.01);
+		near("her light is 1/254", 254.0, rateOf(zilyana, "Saradomin's light"), 0.01);
+		near("the crossbow stays rarer at 1/508", 508.0, rateOf(zilyana, "Armadyl crossbow"), 0.01);
+		near("and so does the hilt", 508.0, rateOf(zilyana, "Saradomin hilt"), 0.01);
+
+		// The wiki cross-checks itself here: a specific shard is 1/762, any shard 1/254.
+		double shards = 1 / rateOf(zilyana, "Godsword shard 1")
+			+ 1 / rateOf(zilyana, "Godsword shard 2") + 1 / rateOf(zilyana, "Godsword shard 3");
+		near("any godsword shard is 1/254", 254.0, 1 / shards, 0.01);
+
+		// Her stated 1/66 for any unique bar the shards. The wiki's own figures sit a few percent
+		// apart from their sum, so this is held loosely enough to catch a factor and not a rounding.
+		double zilyanaTable = 1 / rateOf(zilyana, "Saradomin sword")
+			+ 1 / rateOf(zilyana, "Saradomin's light") + 1 / rateOf(zilyana, "Armadyl crossbow")
+			+ 1 / rateOf(zilyana, "Saradomin hilt");
+		check("her uniques land near the 1/66 she states (" + Math.round(1 / zilyanaTable) + ")",
+			Math.abs(1 / zilyanaTable - 66.0) < 5.0);
+
+		near("the kraken's tentacle is 1/400", 400.0,
+			rateOf(dropTable.find("Kraken"), "Kraken tentacle"), 0.01);
 	}
 
 	/**

@@ -496,7 +496,7 @@
       "items": [
         {
           "name": "Saradomin sword",
-          "rate": 508
+          "rate": 127.0
         },
         {
           "name": "Armadyl crossbow",
@@ -923,7 +923,7 @@
       "items": [
         {
           "name": "Kraken tentacle",
-          "rate": 200
+          "rate": 400.0
         },
         {
           "name": "Trident of the seas",
