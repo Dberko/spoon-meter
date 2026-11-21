@@ -178,9 +178,25 @@ public interface SpoonMeterConfig extends Config
 		return 8.0;
 	}
 
+	@ConfigItem(
+		keyName = "tfaUniqueChance",
+		name = "TFA unique chance",
+		description = "Your chance of a unique per Fractured Archive raid. It is set by team size: "
+			+ "about 6.3 solo, 5.9 for a duo, 8 for a trio, 9.5 for four, 10.5 for five, 11.8 for "
+			+ "six, 12.5 for seven and 13.3 for eight. The unique is then awarded by damage, so "
+			+ "lower it if you carry less than your share",
+		position = 28,
+		section = raidSection
+	)
+	@Units(Units.PERCENT)
+	default double tfaUniqueChance()
+	{
+		return 8.0;
+	}
+
 	@ConfigSection(
-		name = "Shared kills",
-		description = "A boss whose drop chance is split between everyone fighting it cannot be rated from the collection log alone, because the log records the kills but not your share of them",
+		name = "How you fight them",
+		description = "Some bosses roll their drops at a rate that depends on how you fight them, which the collection log cannot see: it records the kills, not whether you shared them or awakened them",
 		position = 30,
 		closedByDefault = true
 	)
@@ -211,5 +227,24 @@ public interface SpoonMeterConfig extends Config
 	default double hueycoatlContribution()
 	{
 		return 5.0;
+	}
+
+	@ConfigItem(
+		keyName = "dt2AwakenedShare",
+		name = "Awakened DT2 kills",
+		description = "How many of your Desert Treasure II kills were awakened."
+			+ "<br><br>An awakened Vardorvis, Duke, Leviathan or Whisperer rolls its unique table "
+			+ "three times as often, and the collection log counts a kill the same either way, so a "
+			+ "plugin that assumes none of them were awakened will call you spooned for drops you "
+			+ "had three times the chance at."
+			+ "<br><br>Leave it at 0 if you only fight them normally. The orb and the pet are rolled "
+			+ "outside that table and are left alone.",
+		position = 33,
+		section = minigameSection
+	)
+	@Units(Units.PERCENT)
+	default double dt2AwakenedShare()
+	{
+		return 0.0;
 	}
 }

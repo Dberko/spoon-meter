@@ -3,509 +3,256 @@
   "note": "Rates are per completion (kill / raid / chest) and come from the OSRS Wiki. 'rate' is a denominator: 1/rate per completion. 'weight' is combined with the variant's totalWeight and the configured unique chance. A source with 'variants' covers one log page whose attempts are counted separately at different rates, each variant naming its counter. Sources flagged approx:true have rates that vary with team size, points or invocation level, so they are a best-effort estimate. Items that drop in STACKS must not be listed: the collection log records how many items you received, not how many drops, so one stack of 132 dragon thrownaxes would otherwise score as 132 uniques. Edit this file to correct or extend it - the plugin reads it at startup.",
   "sources": [
     {
-      "name": "Zulrah",
-      "items": [
-        { "name": "Tanzanite fang", "rate": 512 },
-        { "name": "Magic fang", "rate": 512 },
-        { "name": "Serpentine visage", "rate": 512 },
-        { "name": "Uncut onyx", "rate": 512 },
-        { "name": "Jar of swamp", "rate": 3000 },
-        { "name": "Pet snakeling", "rate": 4000 },
-        { "name": "Tanzanite mutagen", "rate": 6554 },
-        { "name": "Magma mutagen", "rate": 6554 }
-      ]
-    },
-    {
-      "name": "Vorkath",
-      "items": [
-        { "name": "Draconic visage", "rate": 5000 },
-        { "name": "Skeletal visage", "rate": 5000 },
-        { "name": "Dragonbone necklace", "rate": 1000 },
-        { "name": "Jar of decay", "rate": 3000 },
-        { "name": "Vorki", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Corporeal Beast",
-      "items": [
-        { "name": "Spectral sigil", "rate": 585 },
-        { "name": "Arcane sigil", "rate": 585 },
-        { "name": "Elysian sigil", "rate": 585 },
-        { "name": "Pet dark core", "rate": 5000 }
-      ]
-    },
-    {
-      "name": "General Graardor",
-      "items": [
-        { "name": "Bandos chestplate", "rate": 381 },
-        { "name": "Bandos tassets", "rate": 381 },
-        { "name": "Bandos boots", "rate": 381 },
-        { "name": "Bandos hilt", "rate": 508 },
-        { "name": "Godsword shard 1", "rate": 762 },
-        { "name": "Godsword shard 2", "rate": 762 },
-        { "name": "Godsword shard 3", "rate": 762 },
-        { "name": "Pet general graardor", "rate": 5000 }
-      ]
-    },
-    {
-      "name": "Kree'arra",
-      "items": [
-        { "name": "Armadyl helmet", "rate": 381 },
-        { "name": "Armadyl chestplate", "rate": 381 },
-        { "name": "Armadyl chainskirt", "rate": 381 },
-        { "name": "Armadyl hilt", "rate": 508 },
-        { "name": "Godsword shard 1", "rate": 762 },
-        { "name": "Godsword shard 2", "rate": 762 },
-        { "name": "Godsword shard 3", "rate": 762 },
-        { "name": "Pet kree'arra", "rate": 5000 }
-      ]
-    },
-    {
-      "name": "Commander Zilyana",
-      "items": [
-        { "name": "Saradomin sword", "rate": 508 },
-        { "name": "Armadyl crossbow", "rate": 508 },
-        { "name": "Saradomin's light", "rate": 254 },
-        { "name": "Saradomin hilt", "rate": 508 },
-        { "name": "Godsword shard 1", "rate": 762 },
-        { "name": "Godsword shard 2", "rate": 762 },
-        { "name": "Godsword shard 3", "rate": 762 },
-        { "name": "Pet zilyana", "rate": 5000 }
-      ]
-    },
-    {
-      "name": "K'ril Tsutsaroth",
-      "items": [
-        { "name": "Steam battlestaff", "rate": 508 },
-        { "name": "Staff of the dead", "rate": 508 },
-        { "name": "Zamorakian spear", "rate": 508 },
-        { "name": "Zamorak hilt", "rate": 508 },
-        { "name": "Godsword shard 1", "rate": 762 },
-        { "name": "Godsword shard 2", "rate": 762 },
-        { "name": "Godsword shard 3", "rate": 762 },
-        { "name": "Pet k'ril tsutsaroth", "rate": 5000 }
-      ]
-    },
-    {
-      "name": "Nex",
-      "items": [
-        { "name": "Torva full helm damaged", "rate": 258 },
-        { "name": "Torva platebody damaged", "rate": 258 },
-        { "name": "Torva platelegs damaged", "rate": 258 },
-        { "name": "Zaryte vambraces", "rate": 172 },
-        { "name": "Nihil horn", "rate": 258 },
-        { "name": "Ancient hilt", "rate": 516 },
-        { "name": "Nexling", "rate": 500 }
-      ]
-    },
-    {
-      "name": "Cerberus",
-      "items": [
-        { "name": "Primordial crystal", "rate": 512 },
-        { "name": "Pegasian crystal", "rate": 512 },
-        { "name": "Eternal crystal", "rate": 512 },
-        { "name": "Smouldering stone", "rate": 512 },
-        { "name": "Jar of souls", "rate": 2000 },
-        { "name": "Hellpuppy", "rate": 3000 }
-      ]
-    },
-    {
       "name": "Abyssal Sire",
       "items": [
-        { "name": "Bludgeon axon", "rate": 206 },
-        { "name": "Bludgeon spine", "rate": 206 },
-        { "name": "Bludgeon claw", "rate": 206 },
-        { "name": "Abyssal dagger", "rate": 492 },
-        { "name": "Jar of miasma", "rate": 984 },
-        { "name": "Abyssal head", "rate": 1280 },
-        { "name": "Abyssal orphan", "rate": 2560 }
-      ]
-    },
-    {
-      "name": "Kraken",
-      "items": [
-        { "name": "Kraken tentacle", "rate": 200 },
-        { "name": "Trident of the seas", "rate": 512 },
-        { "name": "Jar of dirt", "rate": 1000 },
-        { "name": "Pet kraken", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Thermonuclear smoke devil",
-      "approx": true,
-      "items": [
-        { "name": "Occult necklace", "rate": 350 },
-        { "name": "Smoke battlestaff", "rate": 512 },
-        { "name": "Dragon chainbody", "rate": 2000 },
-        { "name": "Pet smoke devil", "rate": 3000 }
+        {
+          "name": "Bludgeon axon",
+          "rate": 206
+        },
+        {
+          "name": "Bludgeon spine",
+          "rate": 206
+        },
+        {
+          "name": "Bludgeon claw",
+          "rate": 206
+        },
+        {
+          "name": "Abyssal dagger",
+          "rate": 492
+        },
+        {
+          "name": "Jar of miasma",
+          "rate": 984
+        },
+        {
+          "name": "Abyssal head",
+          "rate": 1280
+        },
+        {
+          "name": "Abyssal orphan",
+          "rate": 2560
+        }
       ]
     },
     {
       "name": "Alchemical Hydra",
       "items": [
-        { "names": ["Hydra's eye", "Hydra's fang", "Hydra's heart"], "label": "Brimstone ring piece", "rate": 181.1 },
-        { "name": "Hydra tail", "rate": 513 },
-        { "name": "Hydra leather", "rate": 514 },
-        { "name": "Hydra's claw", "rate": 1001 },
-        { "name": "Alchemical hydra heads", "rate": 256 },
-        { "name": "Jar of chemicals", "rate": 2000 },
-        { "name": "Ikkle hydra", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Grotesque Guardians",
-      "approx": true,
-      "items": [
-        { "name": "Granite gloves", "rate": 500 },
-        { "name": "Granite ring", "rate": 500 },
-        { "name": "Granite hammer", "rate": 500 },
-        { "name": "Black tourmaline core", "rate": 1000 },
-        { "name": "Jar of stone", "rate": 2000 },
-        { "name": "Noon", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Skotizo",
-      "items": [
-        { "name": "Uncut onyx", "rate": 1000 },
-        { "name": "Jar of darkness", "rate": 200 },
-        { "name": "Skotos", "rate": 65 }
-      ]
-    },
-    {
-      "name": "Zalcano",
-      "approx": true,
-      "items": [
-        { "name": "Uncut onyx", "rate": 8000 },
-        { "name": "Crystal tool seed", "rate": 205 },
-        { "name": "Smolcano", "rate": 2250 }
-      ]
-    },
-    {
-      "name": "Sarachnis",
-      "items": [
-        { "name": "Sarachnis cudgel", "rate": 384 },
-        { "name": "Jar of eyes", "rate": 2000 },
-        { "name": "Sraracha", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Wintertodt",
-      "approx": true,
-      "variants": [
         {
-          "counter": "Rewards claimed",
-          "items": [
-            { "name": "Dragon axe", "rate": 10000 }
-          ]
+          "names": [
+            "Hydra's eye",
+            "Hydra's fang",
+            "Hydra's heart"
+          ],
+          "label": "Brimstone ring piece",
+          "rate": 181.1
+        },
+        {
+          "name": "Hydra tail",
+          "rate": 513
+        },
+        {
+          "name": "Hydra leather",
+          "rate": 514
+        },
+        {
+          "name": "Hydra's claw",
+          "rate": 1001
+        },
+        {
+          "name": "Alchemical hydra heads",
+          "rate": 256
+        },
+        {
+          "name": "Jar of chemicals",
+          "rate": 2000
+        },
+        {
+          "name": "Ikkle hydra",
+          "rate": 3000
         }
       ]
     },
     {
-      "name": "Giant Mole",
+      "name": "Amoxliatl",
       "items": [
-        { "name": "Baby mole", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "King Black Dragon",
-      "items": [
-        { "name": "Draconic visage", "rate": 5000 },
-        { "name": "Kbd heads", "rate": 128 },
-        { "name": "Prince black dragon", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Dagannoth Kings",
-      "combined": true,
-      "aliases": ["Dagannoth Rex", "Dagannoth Prime", "Dagannoth Supreme"],
-      "variants": [
         {
-          "counter": "Dagannoth Rex kills",
-          "items": [
-            { "name": "Berserker ring", "rate": 128 },
-            { "name": "Warrior ring", "rate": 128 },
-            { "name": "Dragon axe", "rate": 128 },
-            { "name": "Pet dagannoth rex", "rate": 5000 }
-          ]
+          "name": "Glacial temotli",
+          "rate": 100
         },
         {
-          "counter": "Dagannoth Prime kills",
-          "items": [
-            { "name": "Seers ring", "rate": 128 },
-            { "name": "Mud battlestaff", "rate": 128 },
-            { "name": "Dragon axe", "rate": 128 },
-            { "name": "Pet dagannoth prime", "rate": 5000 }
-          ]
-        },
-        {
-          "counter": "Dagannoth Supreme kills",
-          "items": [
-            { "name": "Archers ring", "rate": 128 },
-            { "name": "Seercull", "rate": 128 },
-            { "name": "Dragon axe", "rate": 128 },
-            { "name": "Pet dagannoth supreme", "rate": 5000 }
-          ]
+          "name": "Moxi",
+          "rate": 3000
         }
-      ]
-    },
-    {
-      "name": "Obor",
-      "items": [
-        { "name": "Hill giant club", "rate": 118 }
-      ]
-    },
-    {
-      "name": "Bryophyta",
-      "items": [
-        { "name": "Bryophyta's essence", "rate": 118 }
-      ]
-    },
-    {
-      "name": "Vardorvis",
-      "items": [
-        { "name": "Ultor vestige", "rate": 1088 },
-        { "name": "Executioner's axe head", "rate": 1088 },
-        { "name": "Chromium ingot", "rate": 362.6666667 },
-        { "name": "Awakener's orb", "rate": 80.6 },
-        { "name": "Virtus mask", "rate": 3264 },
-        { "name": "Virtus robe top", "rate": 3264 },
-        { "name": "Virtus robe bottom", "rate": 3264 },
-        { "name": "Butch", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Duke Sucellus",
-      "items": [
-        { "name": "Magus vestige", "rate": 720 },
-        { "name": "Eye of the duke", "rate": 720 },
-        { "name": "Chromium ingot", "rate": 240 },
-        { "name": "Awakener's orb", "rate": 48.5 },
-        { "name": "Virtus mask", "rate": 2160 },
-        { "name": "Virtus robe top", "rate": 2160 },
-        { "name": "Virtus robe bottom", "rate": 2160 },
-        { "name": "Baron", "rate": 2500 }
-      ]
-    },
-    {
-      "name": "The Leviathan",
-      "items": [
-        { "name": "Venator vestige", "rate": 768 },
-        { "name": "Leviathan's lure", "rate": 768 },
-        { "name": "Chromium ingot", "rate": 256 },
-        { "name": "Awakener's orb", "rate": 53.6 },
-        { "name": "Virtus mask", "rate": 2304 },
-        { "name": "Virtus robe top", "rate": 2304 },
-        { "name": "Virtus robe bottom", "rate": 2304 },
-        { "name": "Lil'viathan", "rate": 2500 }
-      ]
-    },
-    {
-      "name": "The Whisperer",
-      "items": [
-        { "name": "Bellator vestige", "rate": 512 },
-        { "name": "Siren's staff", "rate": 512 },
-        { "name": "Chromium ingot", "rate": 170.6666667 },
-        { "name": "Awakener's orb", "rate": 34.5 },
-        { "name": "Virtus mask", "rate": 1536 },
-        { "name": "Virtus robe top", "rate": 1536 },
-        { "name": "Virtus robe bottom", "rate": 1536 },
-        { "name": "Wisp", "rate": 2000 }
       ]
     },
     {
       "name": "Araxxor",
       "items": [
-        { "name": "Araxyte fang", "rate": 600 },
-        { "name": "Noxious blade", "rate": 600 },
-        { "name": "Noxious point", "rate": 600 },
-        { "name": "Noxious pommel", "rate": 600 },
-        { "name": "Araxyte head", "rate": 250 },
-        { "name": "Jar of venom", "rate": 1500 },
-        { "name": "Nid", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "The Nightmare",
-      "approx": true,
-      "items": [
-        { "name": "Inquisitor's great helm", "rate": 420 },
-        { "name": "Inquisitor's hauberk", "rate": 420 },
-        { "name": "Inquisitor's plateskirt", "rate": 420 },
-        { "name": "Inquisitor's mace", "rate": 750 },
-        { "name": "Nightmare staff", "rate": 300 },
-        { "name": "Eldritch orb", "rate": 960 },
-        { "name": "Harmonised orb", "rate": 960 },
-        { "name": "Volatile orb", "rate": 960 },
-        { "name": "Jar of dreams", "rate": 2000 },
-        { "name": "Little nightmare", "rate": 800 }
-      ]
-    },
-    {
-      "name": "The Gauntlet",
-      "variants": [
         {
-          "counter": "Gauntlet completion count",
-          "items": [
-            { "name": "Crystal weapon seed", "rate": 120 },
-            { "name": "Crystal armour seed", "rate": 120 },
-            { "name": "Enhanced crystal weapon seed", "rate": 2000 },
-            { "name": "Youngllef", "rate": 2000 }
-          ]
+          "name": "Araxyte fang",
+          "rate": 600
         },
         {
-          "counter": "Corrupted Gauntlet completion count",
+          "name": "Noxious blade",
+          "rate": 600
+        },
+        {
+          "name": "Noxious point",
+          "rate": 600
+        },
+        {
+          "name": "Noxious pommel",
+          "rate": 600
+        },
+        {
+          "name": "Araxyte head",
+          "rate": 250
+        },
+        {
+          "name": "Jar of venom",
+          "rate": 1500
+        },
+        {
+          "name": "Nid",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Barrows Chests",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Barrows Chests opened",
           "items": [
-            { "name": "Crystal weapon seed", "rate": 50 },
-            { "name": "Crystal armour seed", "rate": 50 },
-            { "name": "Enhanced crystal weapon seed", "rate": 400 },
-            { "name": "Youngllef", "rate": 800 }
+            {
+              "name": "Ahrim's hood",
+              "rate": 350.14
+            },
+            {
+              "name": "Ahrim's robetop",
+              "rate": 350.14
+            },
+            {
+              "name": "Ahrim's robeskirt",
+              "rate": 350.14
+            },
+            {
+              "name": "Ahrim's staff",
+              "rate": 350.14
+            },
+            {
+              "name": "Dharok's helm",
+              "rate": 350.14
+            },
+            {
+              "name": "Dharok's platebody",
+              "rate": 350.14
+            },
+            {
+              "name": "Dharok's platelegs",
+              "rate": 350.14
+            },
+            {
+              "name": "Dharok's greataxe",
+              "rate": 350.14
+            },
+            {
+              "name": "Guthan's helm",
+              "rate": 350.14
+            },
+            {
+              "name": "Guthan's platebody",
+              "rate": 350.14
+            },
+            {
+              "name": "Guthan's chainskirt",
+              "rate": 350.14
+            },
+            {
+              "name": "Guthan's warspear",
+              "rate": 350.14
+            },
+            {
+              "name": "Karil's coif",
+              "rate": 350.14
+            },
+            {
+              "name": "Karil's leathertop",
+              "rate": 350.14
+            },
+            {
+              "name": "Karil's leatherskirt",
+              "rate": 350.14
+            },
+            {
+              "name": "Karil's crossbow",
+              "rate": 350.14
+            },
+            {
+              "name": "Torag's helm",
+              "rate": 350.14
+            },
+            {
+              "name": "Torag's platebody",
+              "rate": 350.14
+            },
+            {
+              "name": "Torag's platelegs",
+              "rate": 350.14
+            },
+            {
+              "name": "Torag's hammers",
+              "rate": 350.14
+            },
+            {
+              "name": "Verac's helm",
+              "rate": 350.14
+            },
+            {
+              "name": "Verac's brassard",
+              "rate": 350.14
+            },
+            {
+              "name": "Verac's plateskirt",
+              "rate": 350.14
+            },
+            {
+              "name": "Verac's flail",
+              "rate": 350.14
+            }
           ]
         }
       ]
     },
     {
-      "name": "Glough's Experiments",
-      "aliases": ["Demonic Gorillas"],
-      "variants": [
+      "name": "Brutus",
+      "items": [
         {
-          "counter": "Demonic Gorilla kills",
-          "items": [
-            { "name": "Zenyte shard", "rate": 300 },
-            { "name": "Ballista limbs", "rate": 500 },
-            { "name": "Ballista spring", "rate": 500 },
-            { "name": "Light frame", "rate": 750 },
-            { "name": "Heavy frame", "rate": 1500 },
-            { "name": "Monkey tail", "rate": 1500 }
-          ]
+          "name": "Mooleta",
+          "rate": 30
+        },
+        {
+          "name": "Bottomless milk bucket",
+          "rate": 37.5
+        },
+        {
+          "name": "Cow slippers",
+          "rate": 150
+        },
+        {
+          "name": "Beef",
+          "rate": 1000
         }
       ]
     },
     {
-      "name": "Tormented Demons",
+      "name": "Bryophyta",
       "items": [
-        { "name": "Tormented synapse", "rate": 500 },
-        { "name": "Burning claw", "rate": 501 }
-      ]
-    },
-    {
-      "name": "Phantom Muspah",
-      "items": [
-        { "name": "Venator shard", "rate": 100 },
-        { "name": "Ancient icon", "rate": 50 },
-        { "name": "Muphin", "rate": 2500 }
-      ]
-    },
-    {
-      "name": "The Mad Angel",
-      "items": [
-        { "name": "Ardeaglais teleport", "rate": 25 },
-        { "name": "Hallowfell", "rate": 127 },
-        { "name": "Jar of Light", "rate": 1000 },
-        { "name": "Aggy", "rate": 2000 }
-      ]
-    },
-    {
-      "name": "Royal Titans",
-      "items": [
-        { "name": "Giantsoul amulet", "rate": 16 },
-        { "name": "Deadeye prayer scroll", "rate": 75 },
-        { "name": "Mystic vigour prayer scroll", "rate": 75 },
-        { "name": "Ice element staff crown", "rate": 75 },
-        { "name": "Fire element staff crown", "rate": 75 },
-        { "name": "Bran", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Moons of Peril",
-      "approx": true,
-      "variants": [
         {
-          "counter": "Lunar Chests opened",
-          "items": [
-            { "name": "Blood moon helm", "rate": 224 },
-            { "name": "Blood moon chestplate", "rate": 224 },
-            { "name": "Blood moon tassets", "rate": 224 },
-            { "name": "Blue moon helm", "rate": 224 },
-            { "name": "Blue moon chestplate", "rate": 224 },
-            { "name": "Blue moon tassets", "rate": 224 },
-            { "name": "Blue moon spear", "rate": 224 },
-            { "name": "Eclipse moon helm", "rate": 224 },
-            { "name": "Eclipse moon chestplate", "rate": 224 },
-            { "name": "Eclipse moon tassets", "rate": 224 },
-            { "name": "Eclipse atlatl", "rate": 224 },
-            { "name": "Dual macuahuitl", "rate": 224 }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "The Hueycoatl",
-      "approx": true,
-      "rollsPerKcKey": "hueycontribution",
-      "items": [
-        { "name": "Tome of earth", "rate": 90 },
-        { "name": "Dragon hunter wand", "rate": 105 },
-        { "name": "Huberte", "rate": 400 }
-      ]
-    },
-    {
-      "name": "Yama",
-      "items": [
-        { "name": "Oathplate helm", "rate": 600 },
-        { "name": "Oathplate chest", "rate": 600 },
-        { "name": "Oathplate legs", "rate": 600 },
-        { "name": "Yami", "rate": 2500 }
-      ]
-    },
-    {
-      "name": "Doom of Mokhaiotl",
-      "approx": true,
-      "variants": [
-        {
-          "counter": "Total delves",
-          "uniqueChanceKey": "doom",
-          "totalWeight": 5,
-          "items": [
-            { "name": "Mokhaiotl cloth", "weight": 1 },
-            { "name": "Eye of ayak", "weight": 1 },
-            { "name": "Avernic treads", "weight": 1 },
-            { "name": "Dom", "weight": 2 }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Hespori",
-      "approx": true,
-      "items": [
-        { "name": "Bottomless compost bucket", "rate": 35 },
-        { "name": "Tangleroot", "rate": 4950 }
-      ]
-    },
-    {
-      "name": "Kalphite Queen",
-      "items": [
-        { "name": "Dragon chainbody", "rate": 128 },
-        { "name": "Kq head", "rate": 128 },
-        { "name": "Dragon 2h sword", "rate": 256 },
-        { "name": "Jar of sand", "rate": 2000 },
-        { "name": "Kalphite princess", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Tempoross",
-      "variants": [
-        {
-          "counter": "Reward permits claimed",
-          "items": [
-            { "name": "Fish barrel", "rate": 400 },
-            { "name": "Tackle box", "rate": 400 },
-            { "name": "Big harpoonfish", "rate": 1600 },
-            { "name": "Tome of water", "rate": 1600 },
-            { "name": "Dragon harpoon", "rate": 8000 },
-            { "name": "Tiny tempor", "rate": 8000 }
-          ]
+          "name": "Bryophyta's essence",
+          "rate": 118
         }
       ]
     },
@@ -516,167 +263,81 @@
         {
           "counter": "Callisto kills",
           "items": [
-            { "name": "Voidwaker hilt", "rate": 360 },
-            { "name": "Tyrannical ring", "rate": 512 },
-            { "name": "Claws of callisto", "rate": 196 },
-            { "name": "Dragon pickaxe", "rate": 256 },
-            { "name": "Callisto cub", "rate": 1500 }
+            {
+              "name": "Voidwaker hilt",
+              "rate": 360
+            },
+            {
+              "name": "Tyrannical ring",
+              "rate": 512
+            },
+            {
+              "name": "Claws of callisto",
+              "rate": 196
+            },
+            {
+              "name": "Dragon pickaxe",
+              "rate": 256
+            },
+            {
+              "name": "Callisto cub",
+              "rate": 1500
+            }
           ]
         },
         {
           "counter": "Artio kills",
           "items": [
-            { "name": "Voidwaker hilt", "rate": 912 },
-            { "name": "Tyrannical ring", "rate": 716 },
-            { "name": "Claws of callisto", "rate": 618 },
-            { "name": "Dragon pickaxe", "rate": 358 },
-            { "name": "Callisto cub", "rate": 2800 }
+            {
+              "name": "Voidwaker hilt",
+              "rate": 912
+            },
+            {
+              "name": "Tyrannical ring",
+              "rate": 716
+            },
+            {
+              "name": "Claws of callisto",
+              "rate": 618
+            },
+            {
+              "name": "Dragon pickaxe",
+              "rate": 358
+            },
+            {
+              "name": "Callisto cub",
+              "rate": 2800
+            }
           ]
         }
       ]
     },
     {
-      "name": "Vet'ion and Calvar'ion",
-      "combined": true,
-      "variants": [
+      "name": "Cerberus",
+      "items": [
         {
-          "counter": "Vet'ion kills",
-          "items": [
-            { "name": "Voidwaker blade", "rate": 360 },
-            { "name": "Ring of the gods", "rate": 512 },
-            { "name": "Skull of vet'ion", "rate": 196 },
-            { "name": "Vet'ion jr", "rate": 1500 }
-          ]
+          "name": "Primordial crystal",
+          "rate": 512
         },
         {
-          "counter": "Calvar'ion kills",
-          "items": [
-            { "name": "Voidwaker blade", "rate": 912 },
-            { "name": "Ring of the gods", "rate": 716 },
-            { "name": "Skull of vet'ion", "rate": 618 },
-            { "name": "Vet'ion jr", "rate": 2800 }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Venenatis and Spindel",
-      "combined": true,
-      "variants": [
-        {
-          "counter": "Venenatis kills",
-          "items": [
-            { "name": "Voidwaker gem", "rate": 360 },
-            { "name": "Treasonous ring", "rate": 512 },
-            { "name": "Fangs of venenatis", "rate": 196 },
-            { "name": "Venenatis spiderling", "rate": 1500 }
-          ]
+          "name": "Pegasian crystal",
+          "rate": 512
         },
         {
-          "counter": "Spindel kills",
-          "items": [
-            { "name": "Voidwaker gem", "rate": 912 },
-            { "name": "Treasonous ring", "rate": 716 },
-            { "name": "Fangs of venenatis", "rate": 618 },
-            { "name": "Venenatis spiderling", "rate": 2800 }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Chaos Fanatic",
-      "items": [
-        { "name": "Odium shard 1", "rate": 256 },
-        { "name": "Malediction shard 1", "rate": 256 },
-        { "name": "Pet chaos elemental", "rate": 1000 }
-      ]
-    },
-    {
-      "name": "Crazy Archaeologist",
-      "items": [
-        { "name": "Odium shard 2", "rate": 256 },
-        { "name": "Malediction shard 2", "rate": 256 },
-        { "name": "Fedora", "rate": 128 }
-      ]
-    },
-    {
-      "name": "Scorpia",
-      "items": [
-        { "name": "Odium shard 3", "rate": 256 },
-        { "name": "Malediction shard 3", "rate": 256 },
-        { "name": "Scorpia's offspring", "rate": 2015.75 }
-      ]
-    },
-    {
-      "name": "Chaos Elemental",
-      "items": [
-        { "name": "Dragon pickaxe", "rate": 256 },
-        { "name": "Dragon 2h sword", "rate": 64 },
-        { "name": "Pet chaos elemental", "rate": 300 }
-      ]
-    },
-    {
-      "name": "Amoxliatl",
-      "items": [
-        { "name": "Glacial temotli", "rate": 100 },
-        { "name": "Moxi", "rate": 3000 }
-      ]
-    },
-    {
-      "name": "Maggot King",
-      "items": [
-        { "name": "Elder venator fang", "rate": 340 },
-        { "name": "Crimson kisten", "rate": 520 },
-        { "name": "Maggot marquess", "rate": 3500 }
-      ]
-    },
-    {
-      "name": "Brutus",
-      "items": [
-        { "name": "Mooleta", "rate": 30 },
-        { "name": "Bottomless milk bucket", "rate": 37.5 },
-        { "name": "Cow slippers", "rate": 150 },
-        { "name": "Beef", "rate": 1000 }
-      ]
-    },
-    {
-      "name": "The Fight Caves",
-      "items": [
-        { "name": "Tzrek-jad", "rate": 200 }
-      ]
-    },
-    {
-      "name": "Barrows Chests",
-      "approx": true,
-      "variants": [
+          "name": "Eternal crystal",
+          "rate": 512
+        },
         {
-          "counter": "Barrows Chests opened",
-          "items": [
-        { "name": "Ahrim's hood", "rate": 350.14 },
-        { "name": "Ahrim's robetop", "rate": 350.14 },
-        { "name": "Ahrim's robeskirt", "rate": 350.14 },
-        { "name": "Ahrim's staff", "rate": 350.14 },
-        { "name": "Dharok's helm", "rate": 350.14 },
-        { "name": "Dharok's platebody", "rate": 350.14 },
-        { "name": "Dharok's platelegs", "rate": 350.14 },
-        { "name": "Dharok's greataxe", "rate": 350.14 },
-        { "name": "Guthan's helm", "rate": 350.14 },
-        { "name": "Guthan's platebody", "rate": 350.14 },
-        { "name": "Guthan's chainskirt", "rate": 350.14 },
-        { "name": "Guthan's warspear", "rate": 350.14 },
-        { "name": "Karil's coif", "rate": 350.14 },
-        { "name": "Karil's leathertop", "rate": 350.14 },
-        { "name": "Karil's leatherskirt", "rate": 350.14 },
-        { "name": "Karil's crossbow", "rate": 350.14 },
-        { "name": "Torag's helm", "rate": 350.14 },
-        { "name": "Torag's platebody", "rate": 350.14 },
-        { "name": "Torag's platelegs", "rate": 350.14 },
-        { "name": "Torag's hammers", "rate": 350.14 },
-        { "name": "Verac's helm", "rate": 350.14 },
-        { "name": "Verac's brassard", "rate": 350.14 },
-        { "name": "Verac's plateskirt", "rate": 350.14 },
-        { "name": "Verac's flail", "rate": 350.14 }
-          ]
+          "name": "Smouldering stone",
+          "rate": 512
+        },
+        {
+          "name": "Jar of souls",
+          "rate": 2000
+        },
+        {
+          "name": "Hellpuppy",
+          "rate": 3000
         }
       ]
     },
@@ -689,18 +350,54 @@
           "uniqueChanceKey": "cox",
           "totalWeight": 60,
           "items": [
-            { "name": "Dexterous prayer scroll", "weight": 14 },
-            { "name": "Arcane prayer scroll", "weight": 14 },
-            { "name": "Twisted buckler", "weight": 4 },
-            { "name": "Dragon hunter crossbow", "weight": 4 },
-            { "name": "Dinh's bulwark", "weight": 3 },
-            { "name": "Ancestral hat", "weight": 4 },
-            { "name": "Ancestral robe top", "weight": 4 },
-            { "name": "Ancestral robe bottom", "weight": 4 },
-            { "name": "Dragon claws", "weight": 3 },
-            { "name": "Elder maul", "weight": 2 },
-            { "name": "Kodai insignia", "weight": 2 },
-            { "name": "Twisted bow", "weight": 2 }
+            {
+              "name": "Dexterous prayer scroll",
+              "weight": 14
+            },
+            {
+              "name": "Arcane prayer scroll",
+              "weight": 14
+            },
+            {
+              "name": "Twisted buckler",
+              "weight": 4
+            },
+            {
+              "name": "Dragon hunter crossbow",
+              "weight": 4
+            },
+            {
+              "name": "Dinh's bulwark",
+              "weight": 3
+            },
+            {
+              "name": "Ancestral hat",
+              "weight": 4
+            },
+            {
+              "name": "Ancestral robe top",
+              "weight": 4
+            },
+            {
+              "name": "Ancestral robe bottom",
+              "weight": 4
+            },
+            {
+              "name": "Dragon claws",
+              "weight": 3
+            },
+            {
+              "name": "Elder maul",
+              "weight": 2
+            },
+            {
+              "name": "Kodai insignia",
+              "weight": 2
+            },
+            {
+              "name": "Twisted bow",
+              "weight": 2
+            }
           ]
         },
         {
@@ -708,19 +405,1091 @@
           "uniqueChanceKey": "coxcm",
           "totalWeight": 56,
           "items": [
-            { "name": "Dexterous prayer scroll", "weight": 12 },
-            { "name": "Arcane prayer scroll", "weight": 12 },
-            { "name": "Twisted buckler", "weight": 4 },
-            { "name": "Dragon hunter crossbow", "weight": 4 },
-            { "name": "Dinh's bulwark", "weight": 3 },
-            { "name": "Ancestral hat", "weight": 4 },
-            { "name": "Ancestral robe top", "weight": 4 },
-            { "name": "Ancestral robe bottom", "weight": 4 },
-            { "name": "Dragon claws", "weight": 3 },
-            { "name": "Elder maul", "weight": 2 },
-            { "name": "Kodai insignia", "weight": 2 },
-            { "name": "Twisted bow", "weight": 2 }
+            {
+              "name": "Dexterous prayer scroll",
+              "weight": 12
+            },
+            {
+              "name": "Arcane prayer scroll",
+              "weight": 12
+            },
+            {
+              "name": "Twisted buckler",
+              "weight": 4
+            },
+            {
+              "name": "Dragon hunter crossbow",
+              "weight": 4
+            },
+            {
+              "name": "Dinh's bulwark",
+              "weight": 3
+            },
+            {
+              "name": "Ancestral hat",
+              "weight": 4
+            },
+            {
+              "name": "Ancestral robe top",
+              "weight": 4
+            },
+            {
+              "name": "Ancestral robe bottom",
+              "weight": 4
+            },
+            {
+              "name": "Dragon claws",
+              "weight": 3
+            },
+            {
+              "name": "Elder maul",
+              "weight": 2
+            },
+            {
+              "name": "Kodai insignia",
+              "weight": 2
+            },
+            {
+              "name": "Twisted bow",
+              "weight": 2
+            }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Chaos Elemental",
+      "items": [
+        {
+          "name": "Dragon pickaxe",
+          "rate": 256
+        },
+        {
+          "name": "Dragon 2h sword",
+          "rate": 64
+        },
+        {
+          "name": "Pet chaos elemental",
+          "rate": 300
+        }
+      ]
+    },
+    {
+      "name": "Chaos Fanatic",
+      "items": [
+        {
+          "name": "Odium shard 1",
+          "rate": 256
+        },
+        {
+          "name": "Malediction shard 1",
+          "rate": 256
+        },
+        {
+          "name": "Pet chaos elemental",
+          "rate": 1000
+        }
+      ]
+    },
+    {
+      "name": "Commander Zilyana",
+      "items": [
+        {
+          "name": "Saradomin sword",
+          "rate": 508
+        },
+        {
+          "name": "Armadyl crossbow",
+          "rate": 508
+        },
+        {
+          "name": "Saradomin's light",
+          "rate": 254
+        },
+        {
+          "name": "Saradomin hilt",
+          "rate": 508
+        },
+        {
+          "name": "Godsword shard 1",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 2",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 3",
+          "rate": 762
+        },
+        {
+          "name": "Pet zilyana",
+          "rate": 5000
+        }
+      ]
+    },
+    {
+      "name": "Corporeal Beast",
+      "items": [
+        {
+          "name": "Spectral sigil",
+          "rate": 585
+        },
+        {
+          "name": "Arcane sigil",
+          "rate": 585
+        },
+        {
+          "name": "Elysian sigil",
+          "rate": 585
+        },
+        {
+          "name": "Pet dark core",
+          "rate": 5000
+        }
+      ]
+    },
+    {
+      "name": "Crazy Archaeologist",
+      "items": [
+        {
+          "name": "Odium shard 2",
+          "rate": 256
+        },
+        {
+          "name": "Malediction shard 2",
+          "rate": 256
+        },
+        {
+          "name": "Fedora",
+          "rate": 128
+        }
+      ]
+    },
+    {
+      "name": "Dagannoth Kings",
+      "combined": true,
+      "aliases": [
+        "Dagannoth Rex",
+        "Dagannoth Prime",
+        "Dagannoth Supreme"
+      ],
+      "variants": [
+        {
+          "counter": "Dagannoth Rex kills",
+          "items": [
+            {
+              "name": "Berserker ring",
+              "rate": 128
+            },
+            {
+              "name": "Warrior ring",
+              "rate": 128
+            },
+            {
+              "name": "Dragon axe",
+              "rate": 128
+            },
+            {
+              "name": "Pet dagannoth rex",
+              "rate": 5000
+            }
+          ]
+        },
+        {
+          "counter": "Dagannoth Prime kills",
+          "items": [
+            {
+              "name": "Seers ring",
+              "rate": 128
+            },
+            {
+              "name": "Mud battlestaff",
+              "rate": 128
+            },
+            {
+              "name": "Dragon axe",
+              "rate": 128
+            },
+            {
+              "name": "Pet dagannoth prime",
+              "rate": 5000
+            }
+          ]
+        },
+        {
+          "counter": "Dagannoth Supreme kills",
+          "items": [
+            {
+              "name": "Archers ring",
+              "rate": 128
+            },
+            {
+              "name": "Seercull",
+              "rate": 128
+            },
+            {
+              "name": "Dragon axe",
+              "rate": 128
+            },
+            {
+              "name": "Pet dagannoth supreme",
+              "rate": 5000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Doom of Mokhaiotl",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Total delves",
+          "uniqueChanceKey": "doom",
+          "totalWeight": 5,
+          "items": [
+            {
+              "name": "Mokhaiotl cloth",
+              "weight": 1
+            },
+            {
+              "name": "Eye of ayak",
+              "weight": 1
+            },
+            {
+              "name": "Avernic treads",
+              "weight": 1
+            },
+            {
+              "name": "Dom",
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Duke Sucellus",
+      "items": [
+        {
+          "name": "Magus vestige",
+          "rate": 720,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Eye of the duke",
+          "rate": 720,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Chromium ingot",
+          "rate": 240,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Awakener's orb",
+          "rate": 48.5
+        },
+        {
+          "name": "Virtus mask",
+          "rate": 2160,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe top",
+          "rate": 2160,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe bottom",
+          "rate": 2160,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Baron",
+          "rate": 2500
+        }
+      ]
+    },
+    {
+      "name": "General Graardor",
+      "items": [
+        {
+          "name": "Bandos chestplate",
+          "rate": 381
+        },
+        {
+          "name": "Bandos tassets",
+          "rate": 381
+        },
+        {
+          "name": "Bandos boots",
+          "rate": 381
+        },
+        {
+          "name": "Bandos hilt",
+          "rate": 508
+        },
+        {
+          "name": "Godsword shard 1",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 2",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 3",
+          "rate": 762
+        },
+        {
+          "name": "Pet general graardor",
+          "rate": 5000
+        }
+      ]
+    },
+    {
+      "name": "Giant Mole",
+      "items": [
+        {
+          "name": "Baby mole",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Glough's Experiments",
+      "aliases": [
+        "Demonic Gorillas"
+      ],
+      "variants": [
+        {
+          "counter": "Demonic Gorilla kills",
+          "items": [
+            {
+              "name": "Zenyte shard",
+              "rate": 300
+            },
+            {
+              "name": "Ballista limbs",
+              "rate": 500
+            },
+            {
+              "name": "Ballista spring",
+              "rate": 500
+            },
+            {
+              "name": "Light frame",
+              "rate": 750
+            },
+            {
+              "name": "Heavy frame",
+              "rate": 1500
+            },
+            {
+              "name": "Monkey tail",
+              "rate": 1500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Grotesque Guardians",
+      "approx": true,
+      "items": [
+        {
+          "name": "Granite gloves",
+          "rate": 500
+        },
+        {
+          "name": "Granite ring",
+          "rate": 500
+        },
+        {
+          "name": "Granite hammer",
+          "rate": 500
+        },
+        {
+          "name": "Black tourmaline core",
+          "rate": 1000
+        },
+        {
+          "name": "Jar of stone",
+          "rate": 2000
+        },
+        {
+          "name": "Noon",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Hespori",
+      "approx": true,
+      "items": [
+        {
+          "name": "Bottomless compost bucket",
+          "rate": 35
+        },
+        {
+          "name": "Tangleroot",
+          "rate": 4950
+        }
+      ]
+    },
+    {
+      "name": "K'ril Tsutsaroth",
+      "items": [
+        {
+          "name": "Steam battlestaff",
+          "rate": 508
+        },
+        {
+          "name": "Staff of the dead",
+          "rate": 508
+        },
+        {
+          "name": "Zamorakian spear",
+          "rate": 508
+        },
+        {
+          "name": "Zamorak hilt",
+          "rate": 508
+        },
+        {
+          "name": "Godsword shard 1",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 2",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 3",
+          "rate": 762
+        },
+        {
+          "name": "Pet k'ril tsutsaroth",
+          "rate": 5000
+        }
+      ]
+    },
+    {
+      "name": "Kalphite Queen",
+      "items": [
+        {
+          "name": "Dragon chainbody",
+          "rate": 128
+        },
+        {
+          "name": "Kq head",
+          "rate": 128
+        },
+        {
+          "name": "Dragon 2h sword",
+          "rate": 256
+        },
+        {
+          "name": "Jar of sand",
+          "rate": 2000
+        },
+        {
+          "name": "Kalphite princess",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "King Black Dragon",
+      "items": [
+        {
+          "name": "Draconic visage",
+          "rate": 5000
+        },
+        {
+          "name": "Kbd heads",
+          "rate": 128
+        },
+        {
+          "name": "Prince black dragon",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Kraken",
+      "items": [
+        {
+          "name": "Kraken tentacle",
+          "rate": 200
+        },
+        {
+          "name": "Trident of the seas",
+          "rate": 512
+        },
+        {
+          "name": "Jar of dirt",
+          "rate": 1000
+        },
+        {
+          "name": "Pet kraken",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Kree'arra",
+      "items": [
+        {
+          "name": "Armadyl helmet",
+          "rate": 381
+        },
+        {
+          "name": "Armadyl chestplate",
+          "rate": 381
+        },
+        {
+          "name": "Armadyl chainskirt",
+          "rate": 381
+        },
+        {
+          "name": "Armadyl hilt",
+          "rate": 508
+        },
+        {
+          "name": "Godsword shard 1",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 2",
+          "rate": 762
+        },
+        {
+          "name": "Godsword shard 3",
+          "rate": 762
+        },
+        {
+          "name": "Pet kree'arra",
+          "rate": 5000
+        }
+      ]
+    },
+    {
+      "name": "Maggot King",
+      "items": [
+        {
+          "name": "Elder venator fang",
+          "rate": 340
+        },
+        {
+          "name": "Crimson kisten",
+          "rate": 520
+        },
+        {
+          "name": "Maggot marquess",
+          "rate": 3500
+        }
+      ]
+    },
+    {
+      "name": "Moons of Peril",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Lunar Chests opened",
+          "items": [
+            {
+              "name": "Blood moon helm",
+              "rate": 224
+            },
+            {
+              "name": "Blood moon chestplate",
+              "rate": 224
+            },
+            {
+              "name": "Blood moon tassets",
+              "rate": 224
+            },
+            {
+              "name": "Blue moon helm",
+              "rate": 224
+            },
+            {
+              "name": "Blue moon chestplate",
+              "rate": 224
+            },
+            {
+              "name": "Blue moon tassets",
+              "rate": 224
+            },
+            {
+              "name": "Blue moon spear",
+              "rate": 224
+            },
+            {
+              "name": "Eclipse moon helm",
+              "rate": 224
+            },
+            {
+              "name": "Eclipse moon chestplate",
+              "rate": 224
+            },
+            {
+              "name": "Eclipse moon tassets",
+              "rate": 224
+            },
+            {
+              "name": "Eclipse atlatl",
+              "rate": 224
+            },
+            {
+              "name": "Dual macuahuitl",
+              "rate": 224
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Nex",
+      "items": [
+        {
+          "name": "Torva full helm damaged",
+          "rate": 258
+        },
+        {
+          "name": "Torva platebody damaged",
+          "rate": 258
+        },
+        {
+          "name": "Torva platelegs damaged",
+          "rate": 258
+        },
+        {
+          "name": "Zaryte vambraces",
+          "rate": 172
+        },
+        {
+          "name": "Nihil horn",
+          "rate": 258
+        },
+        {
+          "name": "Ancient hilt",
+          "rate": 516
+        },
+        {
+          "name": "Nexling",
+          "rate": 500
+        }
+      ]
+    },
+    {
+      "name": "Obor",
+      "items": [
+        {
+          "name": "Hill giant club",
+          "rate": 118
+        }
+      ]
+    },
+    {
+      "name": "Phantom Muspah",
+      "items": [
+        {
+          "name": "Venator shard",
+          "rate": 100
+        },
+        {
+          "name": "Ancient icon",
+          "rate": 50
+        },
+        {
+          "name": "Muphin",
+          "rate": 2500
+        }
+      ]
+    },
+    {
+      "name": "Royal Titans",
+      "items": [
+        {
+          "name": "Giantsoul amulet",
+          "rate": 16
+        },
+        {
+          "name": "Deadeye prayer scroll",
+          "rate": 75
+        },
+        {
+          "name": "Mystic vigour prayer scroll",
+          "rate": 75
+        },
+        {
+          "name": "Ice element staff crown",
+          "rate": 75
+        },
+        {
+          "name": "Fire element staff crown",
+          "rate": 75
+        },
+        {
+          "name": "Bran",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Sarachnis",
+      "items": [
+        {
+          "name": "Sarachnis cudgel",
+          "rate": 384
+        },
+        {
+          "name": "Jar of eyes",
+          "rate": 2000
+        },
+        {
+          "name": "Sraracha",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Scorpia",
+      "items": [
+        {
+          "name": "Odium shard 3",
+          "rate": 256
+        },
+        {
+          "name": "Malediction shard 3",
+          "rate": 256
+        },
+        {
+          "name": "Scorpia's offspring",
+          "rate": 2015.75
+        }
+      ]
+    },
+    {
+      "name": "Skotizo",
+      "items": [
+        {
+          "name": "Uncut onyx",
+          "rate": 1000
+        },
+        {
+          "name": "Jar of darkness",
+          "rate": 200
+        },
+        {
+          "name": "Skotos",
+          "rate": 65
+        }
+      ]
+    },
+    {
+      "name": "Tempoross",
+      "variants": [
+        {
+          "counter": "Reward permits claimed",
+          "items": [
+            {
+              "name": "Fish barrel",
+              "rate": 400
+            },
+            {
+              "name": "Tackle box",
+              "rate": 400
+            },
+            {
+              "name": "Big harpoonfish",
+              "rate": 1600
+            },
+            {
+              "name": "Tome of water",
+              "rate": 1600
+            },
+            {
+              "name": "Dragon harpoon",
+              "rate": 8000
+            },
+            {
+              "name": "Tiny tempor",
+              "rate": 8000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Fight Caves",
+      "items": [
+        {
+          "name": "Tzrek-jad",
+          "rate": 200
+        }
+      ]
+    },
+    {
+      "name": "The Fractured Archive",
+      "aliases": [
+        "TFA",
+        "Fractured Archive"
+      ],
+      "approx": true,
+      "variants": [
+        {
+          "uniqueChanceKey": "tfa",
+          "totalWeight": 15,
+          "items": [
+            {
+              "name": "Rondache",
+              "weight": 5
+            },
+            {
+              "name": "Zorya's tome",
+              "weight": 4
+            },
+            {
+              "name": "Horn of Bran",
+              "weight": 3
+            },
+            {
+              "name": "Ascension crossbows",
+              "weight": 2
+            },
+            {
+              "name": "Obligator",
+              "weight": 1
+            },
+            {
+              "name": "Orion",
+              "rate": 750
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Gauntlet",
+      "variants": [
+        {
+          "counter": "Gauntlet completion count",
+          "items": [
+            {
+              "name": "Crystal weapon seed",
+              "rate": 120
+            },
+            {
+              "name": "Crystal armour seed",
+              "rate": 120
+            },
+            {
+              "name": "Enhanced crystal weapon seed",
+              "rate": 2000
+            },
+            {
+              "name": "Youngllef",
+              "rate": 2000
+            }
+          ]
+        },
+        {
+          "counter": "Corrupted Gauntlet completion count",
+          "items": [
+            {
+              "name": "Crystal weapon seed",
+              "rate": 50
+            },
+            {
+              "name": "Crystal armour seed",
+              "rate": 50
+            },
+            {
+              "name": "Enhanced crystal weapon seed",
+              "rate": 400
+            },
+            {
+              "name": "Youngllef",
+              "rate": 800
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Hueycoatl",
+      "approx": true,
+      "rollsPerKcKey": "hueycontribution",
+      "items": [
+        {
+          "name": "Tome of earth",
+          "rate": 90
+        },
+        {
+          "name": "Dragon hunter wand",
+          "rate": 105
+        },
+        {
+          "name": "Huberte",
+          "rate": 400
+        }
+      ]
+    },
+    {
+      "name": "The Leviathan",
+      "items": [
+        {
+          "name": "Venator vestige",
+          "rate": 768,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Leviathan's lure",
+          "rate": 768,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Chromium ingot",
+          "rate": 256,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Awakener's orb",
+          "rate": 53.6
+        },
+        {
+          "name": "Virtus mask",
+          "rate": 2304,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe top",
+          "rate": 2304,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe bottom",
+          "rate": 2304,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Lil'viathan",
+          "rate": 2500
+        }
+      ]
+    },
+    {
+      "name": "The Mad Angel",
+      "items": [
+        {
+          "name": "Ardeaglais teleport",
+          "rate": 25
+        },
+        {
+          "name": "Hallowfell",
+          "rate": 127
+        },
+        {
+          "name": "Jar of Light",
+          "rate": 1000
+        },
+        {
+          "name": "Aggy",
+          "rate": 2000
+        }
+      ]
+    },
+    {
+      "name": "The Nightmare",
+      "approx": true,
+      "items": [
+        {
+          "name": "Inquisitor's great helm",
+          "rate": 420
+        },
+        {
+          "name": "Inquisitor's hauberk",
+          "rate": 420
+        },
+        {
+          "name": "Inquisitor's plateskirt",
+          "rate": 420
+        },
+        {
+          "name": "Inquisitor's mace",
+          "rate": 750
+        },
+        {
+          "name": "Nightmare staff",
+          "rate": 300
+        },
+        {
+          "name": "Eldritch orb",
+          "rate": 960
+        },
+        {
+          "name": "Harmonised orb",
+          "rate": 960
+        },
+        {
+          "name": "Volatile orb",
+          "rate": 960
+        },
+        {
+          "name": "Jar of dreams",
+          "rate": 2000
+        },
+        {
+          "name": "Little nightmare",
+          "rate": 800
+        }
+      ]
+    },
+    {
+      "name": "The Whisperer",
+      "items": [
+        {
+          "name": "Bellator vestige",
+          "rate": 512,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Siren's staff",
+          "rate": 512,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Chromium ingot",
+          "rate": 170.6666667,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Awakener's orb",
+          "rate": 34.5
+        },
+        {
+          "name": "Virtus mask",
+          "rate": 1536,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe top",
+          "rate": 1536,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe bottom",
+          "rate": 1536,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Wisp",
+          "rate": 2000
         }
       ]
     },
@@ -733,13 +1502,34 @@
           "uniqueChanceKey": "tob",
           "totalWeight": 19,
           "items": [
-            { "name": "Avernic defender hilt", "weight": 8 },
-            { "name": "Ghrazi rapier", "weight": 2 },
-            { "name": "Sanguinesti staff", "weight": 2 },
-            { "name": "Justiciar faceguard", "weight": 2 },
-            { "name": "Justiciar chestguard", "weight": 2 },
-            { "name": "Justiciar legguards", "weight": 2 },
-            { "name": "Scythe of vitur", "weight": 1 }
+            {
+              "name": "Avernic defender hilt",
+              "weight": 8
+            },
+            {
+              "name": "Ghrazi rapier",
+              "weight": 2
+            },
+            {
+              "name": "Sanguinesti staff",
+              "weight": 2
+            },
+            {
+              "name": "Justiciar faceguard",
+              "weight": 2
+            },
+            {
+              "name": "Justiciar chestguard",
+              "weight": 2
+            },
+            {
+              "name": "Justiciar legguards",
+              "weight": 2
+            },
+            {
+              "name": "Scythe of vitur",
+              "weight": 1
+            }
           ]
         },
         {
@@ -747,14 +1537,57 @@
           "uniqueChanceKey": "tobhm",
           "totalWeight": 18,
           "items": [
-            { "name": "Avernic defender hilt", "weight": 7 },
-            { "name": "Ghrazi rapier", "weight": 2 },
-            { "name": "Sanguinesti staff", "weight": 2 },
-            { "name": "Justiciar faceguard", "weight": 2 },
-            { "name": "Justiciar chestguard", "weight": 2 },
-            { "name": "Justiciar legguards", "weight": 2 },
-            { "name": "Scythe of vitur", "weight": 1 }
+            {
+              "name": "Avernic defender hilt",
+              "weight": 7
+            },
+            {
+              "name": "Ghrazi rapier",
+              "weight": 2
+            },
+            {
+              "name": "Sanguinesti staff",
+              "weight": 2
+            },
+            {
+              "name": "Justiciar faceguard",
+              "weight": 2
+            },
+            {
+              "name": "Justiciar chestguard",
+              "weight": 2
+            },
+            {
+              "name": "Justiciar legguards",
+              "weight": 2
+            },
+            {
+              "name": "Scythe of vitur",
+              "weight": 1
+            }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Thermonuclear smoke devil",
+      "approx": true,
+      "items": [
+        {
+          "name": "Occult necklace",
+          "rate": 350
+        },
+        {
+          "name": "Smoke battlestaff",
+          "rate": 512
+        },
+        {
+          "name": "Dragon chainbody",
+          "rate": 2000
+        },
+        {
+          "name": "Pet smoke devil",
+          "rate": 3000
         }
       ]
     },
@@ -767,13 +1600,34 @@
           "uniqueChanceKey": "toa",
           "totalWeight": 19,
           "items": [
-            { "name": "Osmumten's fang", "weight": 4 },
-            { "name": "Lightbearer", "weight": 5 },
-            { "name": "Elidinis' ward", "weight": 3 },
-            { "name": "Masori mask", "weight": 2 },
-            { "name": "Masori body", "weight": 2 },
-            { "name": "Masori chaps", "weight": 2 },
-            { "name": "Tumeken's shadow", "weight": 1 }
+            {
+              "name": "Osmumten's fang",
+              "weight": 4
+            },
+            {
+              "name": "Lightbearer",
+              "weight": 5
+            },
+            {
+              "name": "Elidinis' ward",
+              "weight": 3
+            },
+            {
+              "name": "Masori mask",
+              "weight": 2
+            },
+            {
+              "name": "Masori body",
+              "weight": 2
+            },
+            {
+              "name": "Masori chaps",
+              "weight": 2
+            },
+            {
+              "name": "Tumeken's shadow",
+              "weight": 1
+            }
           ]
         },
         {
@@ -781,14 +1635,303 @@
           "uniqueChanceKey": "toaexpert",
           "totalWeight": 19,
           "items": [
-            { "name": "Osmumten's fang", "weight": 4 },
-            { "name": "Lightbearer", "weight": 5 },
-            { "name": "Elidinis' ward", "weight": 3 },
-            { "name": "Masori mask", "weight": 2 },
-            { "name": "Masori body", "weight": 2 },
-            { "name": "Masori chaps", "weight": 2 },
-            { "name": "Tumeken's shadow", "weight": 1 }
+            {
+              "name": "Osmumten's fang",
+              "weight": 4
+            },
+            {
+              "name": "Lightbearer",
+              "weight": 5
+            },
+            {
+              "name": "Elidinis' ward",
+              "weight": 3
+            },
+            {
+              "name": "Masori mask",
+              "weight": 2
+            },
+            {
+              "name": "Masori body",
+              "weight": 2
+            },
+            {
+              "name": "Masori chaps",
+              "weight": 2
+            },
+            {
+              "name": "Tumeken's shadow",
+              "weight": 1
+            }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Tormented Demons",
+      "items": [
+        {
+          "name": "Tormented synapse",
+          "rate": 500
+        },
+        {
+          "name": "Burning claw",
+          "rate": 501
+        }
+      ]
+    },
+    {
+      "name": "Vardorvis",
+      "items": [
+        {
+          "name": "Ultor vestige",
+          "rate": 1088,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Executioner's axe head",
+          "rate": 1088,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Chromium ingot",
+          "rate": 362.6666667,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Awakener's orb",
+          "rate": 80.6
+        },
+        {
+          "name": "Virtus mask",
+          "rate": 3264,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe top",
+          "rate": 3264,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Virtus robe bottom",
+          "rate": 3264,
+          "rollsPerKcKey": "dt2awakened"
+        },
+        {
+          "name": "Butch",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Venenatis and Spindel",
+      "combined": true,
+      "variants": [
+        {
+          "counter": "Venenatis kills",
+          "items": [
+            {
+              "name": "Voidwaker gem",
+              "rate": 360
+            },
+            {
+              "name": "Treasonous ring",
+              "rate": 512
+            },
+            {
+              "name": "Fangs of venenatis",
+              "rate": 196
+            },
+            {
+              "name": "Venenatis spiderling",
+              "rate": 1500
+            }
+          ]
+        },
+        {
+          "counter": "Spindel kills",
+          "items": [
+            {
+              "name": "Voidwaker gem",
+              "rate": 912
+            },
+            {
+              "name": "Treasonous ring",
+              "rate": 716
+            },
+            {
+              "name": "Fangs of venenatis",
+              "rate": 618
+            },
+            {
+              "name": "Venenatis spiderling",
+              "rate": 2800
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vet'ion and Calvar'ion",
+      "combined": true,
+      "variants": [
+        {
+          "counter": "Vet'ion kills",
+          "items": [
+            {
+              "name": "Voidwaker blade",
+              "rate": 360
+            },
+            {
+              "name": "Ring of the gods",
+              "rate": 512
+            },
+            {
+              "name": "Skull of vet'ion",
+              "rate": 196
+            },
+            {
+              "name": "Vet'ion jr",
+              "rate": 1500
+            }
+          ]
+        },
+        {
+          "counter": "Calvar'ion kills",
+          "items": [
+            {
+              "name": "Voidwaker blade",
+              "rate": 912
+            },
+            {
+              "name": "Ring of the gods",
+              "rate": 716
+            },
+            {
+              "name": "Skull of vet'ion",
+              "rate": 618
+            },
+            {
+              "name": "Vet'ion jr",
+              "rate": 2800
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vorkath",
+      "items": [
+        {
+          "name": "Draconic visage",
+          "rate": 5000
+        },
+        {
+          "name": "Skeletal visage",
+          "rate": 5000
+        },
+        {
+          "name": "Dragonbone necklace",
+          "rate": 1000
+        },
+        {
+          "name": "Jar of decay",
+          "rate": 3000
+        },
+        {
+          "name": "Vorki",
+          "rate": 3000
+        }
+      ]
+    },
+    {
+      "name": "Wintertodt",
+      "approx": true,
+      "variants": [
+        {
+          "counter": "Rewards claimed",
+          "items": [
+            {
+              "name": "Dragon axe",
+              "rate": 10000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Yama",
+      "items": [
+        {
+          "name": "Oathplate helm",
+          "rate": 600
+        },
+        {
+          "name": "Oathplate chest",
+          "rate": 600
+        },
+        {
+          "name": "Oathplate legs",
+          "rate": 600
+        },
+        {
+          "name": "Yami",
+          "rate": 2500
+        }
+      ]
+    },
+    {
+      "name": "Zalcano",
+      "approx": true,
+      "items": [
+        {
+          "name": "Uncut onyx",
+          "rate": 8000
+        },
+        {
+          "name": "Crystal tool seed",
+          "rate": 205
+        },
+        {
+          "name": "Smolcano",
+          "rate": 2250
+        }
+      ]
+    },
+    {
+      "name": "Zulrah",
+      "items": [
+        {
+          "name": "Tanzanite fang",
+          "rate": 512
+        },
+        {
+          "name": "Magic fang",
+          "rate": 512
+        },
+        {
+          "name": "Serpentine visage",
+          "rate": 512
+        },
+        {
+          "name": "Uncut onyx",
+          "rate": 512
+        },
+        {
+          "name": "Jar of swamp",
+          "rate": 3000
+        },
+        {
+          "name": "Pet snakeling",
+          "rate": 4000
+        },
+        {
+          "name": "Tanzanite mutagen",
+          "rate": 6554
+        },
+        {
+          "name": "Magma mutagen",
+          "rate": 6554
         }
       ]
     }

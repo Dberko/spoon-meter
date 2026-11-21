@@ -380,12 +380,18 @@ public class SpoonMeterPlugin extends Plugin
 		uniqueChances.put("toa", config.toaUniqueChance() / 100.0);
 		uniqueChances.put("toaexpert", config.toaExpertUniqueChance() / 100.0);
 		uniqueChances.put("doom", config.doomUniqueChance() / 100.0);
+		uniqueChances.put("tfa", config.tfaUniqueChance() / 100.0);
 
 		// Not a chance but a roll count, and it shares the map because both are numbers the player
 		// has to supply for a source whose rate the log cannot pin down on its own.
 		// Not a chance but a share of one roll: the Hueycoatl's unique chance is per player and
 		// divided by damage, so a mass world is a fraction of a solo's roll.
 		uniqueChances.put("hueycontribution", config.hueycoatlContribution() / 100.0);
+
+		// Awakened rolls the unique table three times as often, so a mix of the two is worth
+		// somewhere between one roll and three. Derived here rather than stored, so that fighting
+		// none of them awakened reads as a normal kill instead of leaving the bosses unrated.
+		uniqueChances.put("dt2awakened", 1.0 + 2.0 * (config.dt2AwakenedShare() / 100.0));
 
 		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc(),
 			config.hideCombinedPages(), hiddenSources());

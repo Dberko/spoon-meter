@@ -440,6 +440,14 @@ public class SelfCheck
 				== shadows.getPercentile());
 	}
 
+	private static CollectionLogPage tfaRaid(int kc, String item, int count)
+	{
+		CollectionLogPage page = new CollectionLogPage("The Fractured Archive");
+		page.getCounters().put("Fractured Archive completions", kc);
+		page.getItems().put(item, count);
+		return page;
+	}
+
 	private static CollectionLogPage toa(int kc, String item, int count)
 	{
 		CollectionLogPage page = new CollectionLogPage("Tombs of Amascut");
@@ -521,6 +529,101 @@ public class SelfCheck
 		// A source nobody splits must not grow a share label.
 		check("an ordinary boss is never flagged as scaled",
 			!only(zulrah(1024, 7), dropTable, solo).isScaled());
+
+		// An awakened Desert Treasure boss rolls its unique table three times as often, and the log
+		// counts a kill the same either way, so a grinder reads as spooned for drops they had three
+		// times the chance at.
+		DropTable.Source lev = dropTable.find("The Leviathan");
+		CollectionLogPage levPage = new CollectionLogPage("The Leviathan");
+		levPage.getCounters().put("Leviathan kills", 3000);
+		levPage.getItems().put("Venator vestige", 4);
+
+		Map<String, Double> normal = new HashMap<>();
+		normal.put("dt2awakened", 1.0);
+		Map<String, Double> awakened = new HashMap<>();
+		awakened.put("dt2awakened", 3.0);
+
+		near("3000 normal kills expect 3000/768 vestiges", 3000 / 768.0,
+			itemExpected(only(levPage, dropTable, normal), "Venator vestige"), 0.001);
+		near("awakened expects three times that", 3 * 3000 / 768.0,
+			itemExpected(only(levPage, dropTable, awakened), "Venator vestige"), 0.001);
+
+		// The orb and the pet are rolled outside that table and must not move with it.
+		near("the orb does not scale with it",
+			itemExpected(only(levPage, dropTable, normal), "Awakener's orb"),
+			itemExpected(only(levPage, dropTable, awakened), "Awakener's orb"), 1.0e-9);
+		near("nor does the pet",
+			itemExpected(only(levPage, dropTable, normal), "Lil'viathan"),
+			itemExpected(only(levPage, dropTable, awakened), "Lil'viathan"), 1.0e-9);
+
+		// Unlike a damage share, an unset awakened figure means ordinary kills, not an unrated boss.
+		check("leaving it unset still rates the boss",
+			!SpoonReport.build(Collections.singletonList(levPage), dropTable, new HashMap<>(), 10)
+				.isEmpty());
+		near("and reads as normal kills", 3000 / 768.0,
+			itemExpected(only(levPage, dropTable, new HashMap<>()), "Venator vestige"), 0.001);
+
+		// All four scale, and the within-table shares are unchanged, so each stays a third of its
+		// awakened self.
+		for (String boss : new String[]{"Vardorvis", "Duke Sucellus", "The Leviathan", "The Whisperer"})
+		{
+			DropTable.Source dt2 = dropTable.find(boss);
+			boolean scales = false;
+			boolean orbLeftAlone = true;
+
+			for (DropTable.Item item : dt2.getItems())
+			{
+				boolean tagged = "dt2awakened".equals(item.getRollsPerKcKey());
+				String name = DropTable.normalise(item.getName());
+
+				if (tagged)
+				{
+					scales = true;
+				}
+
+				if (tagged && (name.contains("orb") || name.contains("pet")))
+				{
+					orbLeftAlone = false;
+				}
+			}
+
+			check(boss + " scales when awakened", scales);
+			check(boss + " leaves its orb alone", orbLeftAlone);
+		}
+
+		// The Fractured Archive: its unique table is a weighted pick, so the weights must account
+		// for the whole table or every rate inside it is wrong.
+		DropTable.Source tfa = dropTable.find("The Fractured Archive");
+		check("the Fractured Archive is rated", tfa != null);
+		check("and answers to TFA", dropTable.find("TFA") != null);
+
+		Map<String, Double> tfaChance = new HashMap<>();
+		tfaChance.put("tfa", 0.08);
+
+		CollectionLogPage tfaPage = new CollectionLogPage("The Fractured Archive");
+		tfaPage.getCounters().put("Fractured Archive completions", 60);
+		tfaPage.getItems().put("Rondache", 2);
+
+		SpoonReport.SourceLine tfaLine = only(tfaPage, dropTable, tfaChance);
+
+		// The rondache is five fifteenths of the unique table.
+		near("a rondache is 5/15 of the unique table", 60 * 0.08 * 5 / 15.0,
+			itemExpected(tfaLine, "Rondache"), 0.001);
+		// Sixty trios expect nearly five uniques, so two is short on count, and the rondache being
+		// the commonest thing in the table makes it shorter still once rarity is weighed.
+		check("two rondaches is short of what sixty raids owe", tfaLine.getCountRatio() < 1.0);
+		check("and worth less again, being the commonest",
+			tfaLine.getRatio() < tfaLine.getCountRatio());
+		check("where two obligators would be worth more",
+			only(tfaRaid(60, "Obligator", 2), dropTable, tfaChance).getRatio() > tfaLine.getRatio());
+
+		// Milestone and bulk items would wreck it the way granite dust would.
+		Set<String> tfaNames = names(tfa);
+		for (String out : new String[]{"Living record (tier 1)", "Ascension shards",
+			"Archivist's folio", "Fragment of living earth"})
+		{
+			check(out + " stays out of the rating", !tfaNames.contains(DropTable.normalise(out)));
+		}
 
 		// Nobody should be scored against a share they have not set.
 		Map<String, Double> none = new HashMap<>();

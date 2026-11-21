@@ -181,6 +181,20 @@ public class DropTable
 		Double weight;
 		Double chance;
 
+		/**
+		 * Config key for how many times this one item is rolled per kill, where the rest of the
+		 * source is not. An awakened Desert Treasure boss rolls its unique table three times as
+		 * often, but the orb and the pet are rolled outside that table and are not stated to change,
+		 * so the scaling cannot be applied to the whole source.
+		 */
+		String rollsPerKcKey;
+
+		@Nullable
+		public String getRollsPerKcKey()
+		{
+			return rollsPerKcKey;
+		}
+
 		/** What the panel shows. */
 		public String getName()
 		{

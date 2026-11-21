@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -464,7 +465,10 @@ public class SpoonReport
 		Map<String, Accumulator> accumulated = new LinkedHashMap<>();
 		Map<String, Integer> countersUsed = new LinkedHashMap<>();
 		int totalKc = 0;
-		double totalRolls = 0;
+
+		// What a kill was worth, collected per item. Reported only when every item agrees, because
+		// "each kill counted as N rolls" is a claim about the whole source.
+		Set<Double> rollsSeen = new LinkedHashSet<>();
 
 		for (DropTable.Variant variant : source.getVariants())
 		{
@@ -508,7 +512,6 @@ public class SpoonReport
 			}
 
 			totalKc += kc;
-			totalRolls += rolls;
 			countersUsed.put(counter == null ? page.getPrimaryCounterLabel() : counter, kc);
 
 			for (DropTable.Item item : variant.getItems())
@@ -520,11 +523,33 @@ public class SpoonReport
 					continue;
 				}
 
+				// An item may be rolled more often than the rest of its source: an awakened Desert
+				// Treasure boss rolls its unique table three times as often, while the orb and the
+				// pet beside it are rolled outside that table and are left alone.
+				//
+				// A key on the variant says the source cannot be rated at all until the player
+				// supplies it, as with the Hueycoatl's damage share. A key on one item only
+				// modifies a rate that is already known, so leaving it unset means the ordinary
+				// kill rather than an item nobody can score.
+				double itemRolls = rolls;
+
+				if (item.getRollsPerKcKey() != null)
+				{
+					Double perItem = uniqueChances.get(item.getRollsPerKcKey());
+
+					if (perItem != null && perItem > 0)
+					{
+						itemRolls = kc * perItem;
+					}
+				}
+
+				rollsSeen.add(itemRolls / kc);
+
 				String key = DropTable.normalise(item.getName());
 				Accumulator accumulator = accumulated.computeIfAbsent(key, k -> new Accumulator(item.getName()));
 
-				accumulator.expected += rolls * chance;
-				accumulator.missProbability *= Math.pow(1.0 - chance, rolls);
+				accumulator.expected += itemRolls * chance;
+				accumulator.missProbability *= Math.pow(1.0 - chance, itemRolls);
 				accumulator.shown = page.quantityOfAny(item.getNames());
 			}
 		}
@@ -534,10 +559,8 @@ public class SpoonReport
 			return null;
 		}
 
-		// Kept as a ratio rather than the configured figure, so a source split across variants that
-		// scale differently still reports what its kill count was actually worth.
 		return new Scored(page.getName(), countersUsed, totalKc, source.isApprox(),
-			totalKc > 0 ? totalRolls / totalKc : 1.0, accumulated);
+			rollsSeen.size() == 1 ? rollsSeen.iterator().next() : 1.0, accumulated);
 	}
 
 	/**
