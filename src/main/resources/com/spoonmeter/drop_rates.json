@@ -1574,15 +1574,15 @@
       "approx": true,
       "items": [
         {
-          "name": "Occult necklace",
-          "rate": 350
-        },
-        {
           "name": "Smoke battlestaff",
           "rate": 512
         },
         {
           "name": "Dragon chainbody",
+          "rate": 2000
+        },
+        {
+          "name": "Jar of smoke",
           "rate": 2000
         },
         {

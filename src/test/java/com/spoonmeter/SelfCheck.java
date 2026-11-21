@@ -340,6 +340,29 @@ public class SelfCheck
 
 		near("the kraken's tentacle is 1/400", 400.0,
 			rateOf(dropTable.find("Kraken"), "Kraken tentacle"), 0.01);
+
+		// The collection log records a quantity for the whole account but counts only boss kills, so
+		// an item that also drops off something the log never counts arrives with a number that
+		// means nothing. Occult necklaces come off ordinary smoke devils at 1/512, and a slayer task
+		// supplies hundreds of those, so a page showing twenty-six of them says nothing about the
+		// boss. It is left out for the same reason a bulk stack is.
+		DropTable.Source thermy = dropTable.find("Thermonuclear smoke devil");
+		check("the occult is not scored against the boss",
+			!names(thermy).contains(DropTable.normalise("Occult necklace")));
+
+		// What is left is the three the boss alone drops, plus a chainbody it shares only with the
+		// Kalphite Queen, which is a counted source and so pools properly.
+		for (String only : new String[]{"Smoke battlestaff", "Jar of smoke", "Pet smoke devil"})
+		{
+			check(only + " still is", names(thermy).contains(DropTable.normalise(only)));
+		}
+
+		check("and the chainbody, which the queen also drops",
+			names(thermy).contains(DropTable.normalise("Dragon chainbody"))
+				&& names(dropTable.find("Kalphite Queen"))
+					.contains(DropTable.normalise("Dragon chainbody")));
+
+		check("so the boss is still worth rating", thermy.getItems().size() >= 4);
 	}
 
 	/**
