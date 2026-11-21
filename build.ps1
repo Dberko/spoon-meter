@@ -67,12 +67,44 @@ function Find-JdkTool([string]$name)
         if ($hits) { $candidates += ($hits | Select-Object -ExpandProperty FullName) }
     }
 
+    # A machine can carry several JDKs, and whichever one owns the PATH wins by accident. The
+    # compile targets release 11, which javac 8 cannot do at all, so the version decides rather
+    # than the order. Lowest usable wins, to stay closest to the release being targeted.
+    $usable = @()
+
     foreach ($candidate in $candidates)
     {
-        if ($candidate -and (Test-Path $candidate)) { return $candidate }
+        if (-not ($candidate -and (Test-Path $candidate))) { continue }
+
+        $major = Get-ToolMajorVersion $candidate $name
+        if ($major -ge 11) { $usable += [pscustomobject]@{ Path = $candidate; Major = $major } }
+    }
+
+    if ($usable.Count -gt 0)
+    {
+        return ($usable | Sort-Object Major, Path | Select-Object -First 1).Path
     }
 
     return $null
+}
+
+function Get-ToolMajorVersion([string]$exe, [string]$name)
+{
+    # Only javac is version-checked; jar and java are taken from the chosen JDK's own bin.
+    if ($name -ne 'javac') { return 11 }
+
+    # javac 8 writes its version to stderr and 9+ to stdout, so let cmd join them. Redirecting a
+    # native command's stderr inside PowerShell 5.1 turns each line into an error record.
+    $reported = & cmd.exe /c "`"$exe`" -version 2>&1"
+
+    if ($reported -match 'javac\s+(\d+)\.(\d+)')
+    {
+        # 1.8.0_512 is Java 8; 11.0.32.1 is Java 11.
+        if ($matches[1] -eq '1') { return [int]$matches[2] }
+        return [int]$matches[1]
+    }
+
+    return 0
 }
 
 function Get-NewestJars([string]$dir)
@@ -132,6 +164,7 @@ if (-not $javac)
     Write-Host "No JDK found. RuneLite ships a JRE (no compiler), so you need a JDK 11 or newer:" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "    scoop bucket add java; scoop install temurin11-jdk"
+    Write-Host "  A JDK 8 on its own is not enough: the compile targets release 11."
     Write-Host "  or"
     Write-Host "    winget install --id EclipseAdoptium.Temurin.11.JDK -e"
     Write-Host ""
