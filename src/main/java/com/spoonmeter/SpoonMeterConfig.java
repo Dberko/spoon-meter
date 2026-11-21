@@ -179,35 +179,37 @@ public interface SpoonMeterConfig extends Config
 	}
 
 	@ConfigSection(
-		name = "Reward rolls and contribution",
-		description = "A few sources are not rolled once per completion. Some roll many times, some roll a fraction of a time because the roll is shared out by damage, and the collection log records neither",
+		name = "Shared kills",
+		description = "A boss whose drop chance is split between everyone fighting it cannot be rated from the collection log alone, because the log records the kills but not your share of them",
 		position = 30,
 		closedByDefault = true
 	)
 	String minigameSection = "minigameSection";
 
 	@ConfigItem(
-		keyName = "gotrSearchesPerGame",
-		name = "GOTR searches per rift",
-		description = "How many times you search the Rewards Guardian per rift closed. Guardians of the Rift rates are per search, and a search costs one elemental and one catalytic point, so this follows the points you earn: about 8 at a steady pace, 10 at the energy cap, and more if you spend pearls. Set it to zero to leave the minigame unrated",
-		position = 31,
-		section = minigameSection
-	)
-	default double gotrSearchesPerRift()
-	{
-		return 8.0;
-	}
-
-	@ConfigItem(
 		keyName = "hueycoatlContribution",
 		name = "Hueycoatl damage share",
-		description = "Your average share of the damage to the Hueycoatl. Its 1/18 unique chance is per player and scaled by contribution, so a mass splits it: 100 is a solo, and a crowded world is nearer 10 to 20. The collection log cannot tell which you did. Set it to zero to leave the boss unrated",
+		// RuneLite wraps a description in <html> for the tooltip, so this lays the figures out as a
+		// list. Nobody knows their damage share off the top of their head, but they do know how many
+		// people they fight it with, and a kill is a fixed 4,050 damage however many that is.
+		description = "Your average share of the damage you deal to the Hueycoatl."
+			+ "<br><br>Its 1/18 unique chance is per player and scaled by contribution, so a mass "
+			+ "splits one roll between everyone fighting. A kill is 4,050 damage however many of "
+			+ "you there are, so your share is your own damage over that."
+			+ "<br><br>Solo: 100"
+			+ "<br>Duo: 50"
+			+ "<br>Trio: 33"
+			+ "<br>Five: 20"
+			+ "<br>Ten: 10"
+			+ "<br>A full mass of twenty: 5"
+			+ "<br><br>Raise it if you out-damage the rest of the crowd, or lower it if you turn up "
+			+ "late and only get a few hits in. Zero leaves the boss out of the rating entirely.",
 		position = 32,
 		section = minigameSection
 	)
 	@Units(Units.PERCENT)
 	default double hueycoatlContribution()
 	{
-		return 100.0;
+		return 5.0;
 	}
 }

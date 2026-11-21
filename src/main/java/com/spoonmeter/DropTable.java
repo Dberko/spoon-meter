@@ -129,11 +129,11 @@ public class DropTable
 		String uniqueChanceKey;
 
 		/**
-		 * Config key for how many times this variant is rolled per counted completion, for a
-		 * minigame whose rewards come from rolls the collection log does not count. Guardians of the
-		 * Rift works this way: its rates are per search of the Rewards Guardian, the log counts
-		 * rifts, and how many searches a rift is worth depends on the points earned, so only the
-		 * player can supply it.
+		 * Config key for how many times this variant is rolled per kill the log counts, where that
+		 * is not simply once and the log cannot tell. The Hueycoatl needs it: its unique chance is
+		 * per player and scaled by contribution, so a mass world splits one roll between everyone
+		 * fighting and a share is a fraction of a roll. A source rolled several times over would
+		 * use the same key the other way.
 		 */
 		String rollsPerKcKey;
 		Double totalWeight;

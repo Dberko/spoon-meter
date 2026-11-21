@@ -383,10 +383,8 @@ public class SpoonMeterPlugin extends Plugin
 
 		// Not a chance but a roll count, and it shares the map because both are numbers the player
 		// has to supply for a source whose rate the log cannot pin down on its own.
-		uniqueChances.put("gotrsearches", config.gotrSearchesPerRift());
-
-		// A share of one roll rather than many: the Hueycoatl's unique chance is per player and
-		// divided by damage, so a mass world is a fraction of a solo roll.
+		// Not a chance but a share of one roll: the Hueycoatl's unique chance is per player and
+		// divided by damage, so a mass world is a fraction of a solo's roll.
 		uniqueChances.put("hueycontribution", config.hueycoatlContribution() / 100.0);
 
 		return SpoonReport.build(pages.values(), dropTable, uniqueChances, config.minimumKc(),
