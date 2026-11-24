@@ -707,6 +707,44 @@ public class SelfCheck
 			check(out + " stays out of the rating", !tfaNames.contains(DropTable.normalise(out)));
 		}
 
+		// A raid's unique chance is the player's own, not the team's. The Fractured Archive had
+		// been given the team figure, which is three times a trio's share of it.
+		near("a trio's own Fractured Archive chance is 2.7, not the team's 8", 2.7,
+			new SpoonMeterConfig()
+			{
+			}.tfaUniqueChance(), 0.001);
+
+		// It has to reach the row, or the player cannot tell which figure produced their verdict.
+		CollectionLogPage raid = new CollectionLogPage("The Fractured Archive");
+		raid.getCounters().put("Fractured Archive completions", 60);
+		raid.getItems().put("Rondache", 2);
+
+		Map<String, Double> trio = new HashMap<>();
+		trio.put("tfa", 0.027);
+		SpoonReport.SourceLine raidLine = only(raid, dropTable, trio);
+
+		near("the row knows what it was scored against", 0.027, raidLine.getUniqueChance(), 1.0e-9);
+		near("sixty trios expect 60 x 2.7%", 60 * 0.027,
+			raidLine.getExpected() - itemExpected(raidLine, "Orion"), 0.01);
+
+		// Two modes at different chances average over the kills each covered, rather than vanishing.
+		CollectionLogPage theatre = new CollectionLogPage("Theatre of Blood");
+		theatre.getCounters().put("Theatre of Blood completions", 246);
+		theatre.getCounters().put("Theatre of Blood (Hard) completions", 31);
+		theatre.getItems().put("Avernic defender hilt", 4);
+
+		Map<String, Double> tob = new HashMap<>();
+		tob.put("tob", 0.037);
+		tob.put("tobhm", 0.044);
+		SpoonReport.SourceLine tobLine = only(theatre, dropTable, tob);
+
+		near("the theatre averages its two modes over their kills",
+			(246 * 0.037 + 31 * 0.044) / 277, tobLine.getUniqueChance(), 1.0e-9);
+
+		// A boss with no configured chance says nothing, rather than claiming nought percent.
+		check("an ordinary boss carries no raid chance",
+			only(zulrah(1024, 7), dropTable, solo).getUniqueChance() == 0);
+
 		// Nobody should be scored against a share they have not set.
 		Map<String, Double> none = new HashMap<>();
 		none.put("hueycontribution", 0.0);

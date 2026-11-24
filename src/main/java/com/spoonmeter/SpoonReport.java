@@ -103,14 +103,17 @@ public class SpoonReport
 		/** Rolls per counted kill: below one where the roll is shared out, above one where repeated. */
 		private final double rollsPerKc;
 
+		/** The per-raid unique chance this was scored against, or zero where none was configured. */
+		private final double uniqueChance;
+
 		/** The same totals as {@link #obtained} and {@link #expected}, weighted by how rare each is. */
 		private final double weighted;
 		private final double weightedExpected;
 		private final List<ItemLine> items;
 
 		SourceLine(String name, Map<String, Integer> counters, int kc, int obtained, double expected,
-			double percentile, boolean approximate, double rollsPerKc, double weighted,
-			double weightedExpected, List<ItemLine> items)
+			double percentile, boolean approximate, double rollsPerKc, double uniqueChance,
+			double weighted, double weightedExpected, List<ItemLine> items)
 		{
 			this.name = name;
 			this.counters = counters;
@@ -121,6 +124,7 @@ public class SpoonReport
 			this.rating = LuckRating.fromPercentile(percentile);
 			this.approximate = approximate;
 			this.rollsPerKc = rollsPerKc;
+			this.uniqueChance = uniqueChance;
 			this.weighted = weighted;
 			this.weightedExpected = weightedExpected;
 			this.items = items;
@@ -166,6 +170,11 @@ public class SpoonReport
 		public double getRollsPerKc()
 		{
 			return rollsPerKc;
+		}
+
+		public double getUniqueChance()
+		{
+			return uniqueChance;
 		}
 
 		/** Whether the kill count alone does not say how many rolls the account actually got. */
@@ -247,16 +256,18 @@ public class SpoonReport
 		private final int kc;
 		private final boolean approximate;
 		private final double rollsPerKc;
+		private final double uniqueChance;
 		private final Map<String, Accumulator> items;
 
 		private Scored(String name, Map<String, Integer> counters, int kc, boolean approximate,
-			double rollsPerKc, Map<String, Accumulator> items)
+			double rollsPerKc, double uniqueChance, Map<String, Accumulator> items)
 		{
 			this.name = name;
 			this.counters = counters;
 			this.kc = kc;
 			this.approximate = approximate;
 			this.rollsPerKc = rollsPerKc;
+			this.uniqueChance = uniqueChance;
 			this.items = items;
 		}
 	}
@@ -463,7 +474,7 @@ public class SpoonReport
 
 			lines.add(new SourceLine(page.name, page.counters, page.kc, pageObtained, pageExpected,
 				RarityLuck.percentile(expectedPerItem, collectedPerItem), page.approximate,
-				page.rollsPerKc, weighted, weightedExpected, items));
+				page.rollsPerKc, page.uniqueChance, weighted, weightedExpected, items));
 		}
 
 		return new SpoonReport(lines, totalObtained, totalExpected, accountPercentile(lines),
@@ -519,6 +530,10 @@ public class SpoonReport
 		// "each kill counted as N rolls" is a claim about the whole source.
 		Set<Double> rollsSeen = new LinkedHashSet<>();
 
+		// The per-raid unique chance the player configured, averaged over the modes they played, so
+		// a row can say what it assumed rather than leaving them to guess at the settings.
+		double chanceWeighted = 0;
+
 		for (DropTable.Variant variant : source.getVariants())
 		{
 			String counter = variant.getCounter();
@@ -561,6 +576,7 @@ public class SpoonReport
 			}
 
 			totalKc += kc;
+			chanceWeighted += kc * uniqueChance;
 			countersUsed.put(counter == null ? page.getPrimaryCounterLabel() : counter, kc);
 
 			for (DropTable.Item item : variant.getItems())
@@ -615,7 +631,8 @@ public class SpoonReport
 		}
 
 		return new Scored(page.getName(), countersUsed, totalKc, source.isApprox(),
-			rollsSeen.size() == 1 ? rollsSeen.iterator().next() : 1.0, accumulated);
+			rollsSeen.size() == 1 ? rollsSeen.iterator().next() : 1.0,
+			totalKc > 0 ? chanceWeighted / totalKc : 0, accumulated);
 	}
 
 	/**

@@ -115,7 +115,10 @@ public interface SpoonMeterConfig extends Config
 	@ConfigItem(
 		keyName = "coxUniqueChance",
 		name = "CoX purple chance",
-		description = "Your average chance of a unique per Chambers raid. Points / 8675 gives the percent, so 30k points is 3.5",
+		description = "YOUR OWN chance of a unique per Chambers raid. Use your own points, not the "
+			+ "team's: your points over 8,675 gives the percent, so 30k of your own is 3.5. A raid "
+			+ "hands its uniques out weighted by the points each player earned, so a bigger team "
+			+ "splits the same pot more ways",
 		position = 21,
 		section = raidSection
 	)
@@ -141,7 +144,11 @@ public interface SpoonMeterConfig extends Config
 	@ConfigItem(
 		keyName = "tobUniqueChance",
 		name = "ToB purple chance",
-		description = "Your average chance of a unique per Theatre raid. The team rate is 1/9.1 (11%) split between the team, so a trio is about 3.7",
+		description = "YOUR OWN chance of a unique per Theatre raid, which is not the team's. The "
+			+ "raid rolls one unique at 1/9.1 (11%) however many of you there are, and hands it to "
+			+ "one player weighted by damage and deaths, so your share falls as the team grows."
+			+ "<br><br>Solo: 11<br>Duo: 5.5<br>Trio: 3.7<br>Four: 2.8<br>Five: 2.2"
+			+ "<br><br>Raise it if you are usually the MVP, who the wiki says is likeliest to get it.",
 		position = 22,
 		section = raidSection
 	)
@@ -154,7 +161,9 @@ public interface SpoonMeterConfig extends Config
 	@ConfigItem(
 		keyName = "tobHardUniqueChance",
 		name = "ToB (HM) purple chance",
-		description = "Your average chance of a unique per Hard Mode Theatre raid. The team rate is 13% (1/7.7) split between the team, so a trio is about 4.4",
+		description = "YOUR OWN chance of a unique per Hard Mode Theatre raid, which is not the "
+			+ "team's. The raid rolls one unique at 1/7.7 (13%) however many of you there are."
+			+ "<br><br>Solo: 13<br>Duo: 6.5<br>Trio: 4.4<br>Four: 3.3<br>Five: 2.6",
 		position = 24,
 		section = raidSection
 	)
@@ -167,7 +176,12 @@ public interface SpoonMeterConfig extends Config
 	@ConfigItem(
 		keyName = "toaUniqueChance",
 		name = "ToA purple chance",
-		description = "Your average chance of a unique per Tombs raid. Roughly points / (10500 - 20 x raid level) as a percent: about 5 for a 300 solo, 12 for a 400. This one setting can dominate your account total, so set it to the raids you actually run",
+		description = "YOUR OWN chance of a unique per Tombs raid, which is not the team's. Roughly "
+			+ "points / (10500 - 20 x raid level) as a percent: about 5 for a 300 SOLO, 12 for a 400 "
+			+ "solo. Tombs rolls one unique per raid and gives it to one player, so divide by your "
+			+ "team size: a 300 trio is nearer 1.7 than 5."
+			+ "<br><br>This one setting can dominate your account total, so set it to the raids you "
+			+ "actually run",
 		position = 25,
 		section = raidSection
 	)
@@ -193,17 +207,25 @@ public interface SpoonMeterConfig extends Config
 	@ConfigItem(
 		keyName = "tfaUniqueChance",
 		name = "TFA unique chance",
-		description = "Your chance of a unique per Fractured Archive raid. It is set by team size: "
-			+ "about 6.3 solo, 5.9 for a duo, 8 for a trio, 9.5 for four, 10.5 for five, 11.8 for "
-			+ "six, 12.5 for seven and 13.3 for eight. The unique is then awarded by damage, so "
-			+ "lower it if you carry less than your share",
+		description = "YOUR OWN chance of a unique per Fractured Archive raid, which is not the "
+			+ "team's. The raid rolls one unique and hands it to somebody by damage, so your share "
+			+ "of it falls as the team grows."
+			+ "<br><br>Solo: 5.9"
+			+ "<br>Duo: 2.9"
+			+ "<br>Trio: 2.7"
+			+ "<br>Four: 2.4"
+			+ "<br>Five: 2.1"
+			+ "<br>Six: 2.0"
+			+ "<br>Seven: 1.8"
+			+ "<br>Eight: 1.7"
+			+ "<br><br>Raise it if you out-damage the rest of the team, lower it if you carry less.",
 		position = 28,
 		section = raidSection
 	)
 	@Units(Units.PERCENT)
 	default double tfaUniqueChance()
 	{
-		return 8.0;
+		return 2.7;
 	}
 
 	@ConfigSection(

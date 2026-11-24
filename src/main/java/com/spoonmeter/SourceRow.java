@@ -76,7 +76,15 @@ class SourceRow extends JPanel
 		kc.setFont(FontManager.getRunescapeSmallFont());
 		kc.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 
-		if (line.isScaled())
+		if (line.getUniqueChance() > 0)
+		{
+			kc.setToolTipText("<html>Scored against a "
+				+ SpoonSummary.ONE_DP.format(line.getUniqueChance() * 100)
+				+ "% chance of a unique per raid, which is a setting.<br>"
+				+ "It is your own chance, not the team's: where a raid rolls one unique and hands "
+				+ "it<br>to somebody, your share of it falls as the team grows.</html>");
+		}
+		else if (line.isScaled())
 		{
 			// Without this the figures look broken rather than misconfigured: a soloer left on the
 			// default mass share sees twenty times the drops they should, with nothing on the row to
@@ -164,6 +172,13 @@ class SourceRow extends JPanel
 	 */
 	private static String scaling(SpoonReport.SourceLine line)
 	{
+		// A raid's unique chance is a setting, and getting it wrong moves the verdict further than
+		// any run of luck does, so the row says which figure it used.
+		if (line.getUniqueChance() > 0)
+		{
+			return "  · " + SpoonSummary.ONE_DP.format(line.getUniqueChance() * 100) + "% a raid";
+		}
+
 		if (!line.isScaled())
 		{
 			return "";
